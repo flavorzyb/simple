@@ -17,7 +17,7 @@ class Repository implements ArrayAccess
      *
      * @var array
      */
-    protected $mItems = [];
+    protected $items = [];
 
     /**
      * Create a new configuration repository.
@@ -26,84 +26,7 @@ class Repository implements ArrayAccess
      */
     public function __construct(array $items = array())
     {
-        $this->mItems = $items;
-    }
-
-    /**
-     * Determine if the given configuration value exists.
-     *
-     * @param  string  $key
-     * @return bool
-     */
-    public function has($key)
-    {
-        return array_has($this->mItems, $key);
-    }
-
-    /**
-     * Get the specified configuration value.
-     *
-     * @param  string  $key
-     * @param  mixed   $default
-     * @return mixed
-     */
-    public function get($key, $default = null)
-    {
-        return array_get($this->mItems, $key, $default);
-    }
-
-    /**
-     * Set a given configuration value.
-     *
-     * @param  array|string  $key
-     * @param  mixed   $value
-     * @return void
-     */
-    public function set($key, $value = null)
-    {
-        if (is_array($key))
-        {
-            foreach ($key as $innerKey => $innerValue)
-            {
-                array_set($this->mItems, $innerKey, $innerValue);
-            }
-        }
-        else
-        {
-            array_set($this->mItems, $key, $value);
-        }
-    }
-
-    /**
-     * Prepend a value onto an array configuration value.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return void
-     */
-    public function prepend($key, $value)
-    {
-        $array = $this->get($key);
-
-        array_unshift($array, $value);
-
-        $this->set($key, $array);
-    }
-
-    /**
-     * Push a value onto an array configuration value.
-     *
-     * @param  string  $key
-     * @param  mixed  $value
-     * @return void
-     */
-    public function push($key, $value)
-    {
-        $array = $this->get($key);
-
-        $array[] = $value;
-
-        $this->set($key, $array);
+        $this->items = $items;
     }
 
     /**
@@ -113,7 +36,7 @@ class Repository implements ArrayAccess
      */
     public function all()
     {
-        return $this->mItems;
+        return $this->items;
     }
 
     /**
@@ -124,7 +47,7 @@ class Repository implements ArrayAccess
      */
     public function offsetExists($key)
     {
-        return $this->has($key);
+        return isset($this->items[$key]);
     }
 
     /**
@@ -135,7 +58,7 @@ class Repository implements ArrayAccess
      */
     public function offsetGet($key)
     {
-        return $this->get($key);
+        return isset($this->items[$key]) ? $this->items[$key] : null;
     }
 
     /**
@@ -143,11 +66,10 @@ class Repository implements ArrayAccess
      *
      * @param  string  $key
      * @param  mixed  $value
-     * @return void
      */
     public function offsetSet($key, $value)
     {
-        $this->set($key, $value);
+        $this->items[$key] = $value;
     }
 
     /**
@@ -158,6 +80,8 @@ class Repository implements ArrayAccess
      */
     public function offsetUnset($key)
     {
-        $this->set($key, null);
+        if (isset($this->items[$key])) {
+            unset($this->items[$key]);
+        }
     }
 }

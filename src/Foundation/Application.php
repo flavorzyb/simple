@@ -9,6 +9,8 @@
 namespace Simple\Foundation;
 
 
+use Simple\Config\Repository;
+
 class Application
 {
     /**
@@ -24,11 +26,16 @@ class Application
      */
     protected $basePath     = null;
     /**
-     * the config array
-     * @var array
+     * the config Repository
+     * @var Repository
      */
-    protected $config       = array();
+    protected $config       = null;
 
+    /**
+     * config path
+     * @var string
+     */
+    protected $configPath   = null;
     /**
      * the storage path
      * @var string
@@ -73,10 +80,57 @@ class Application
     }
 
     /**
+     * set application config
+     * @param Repository $config
+     */
+    public function setConfig(Repository $config)
+    {
+        $this->config   = $config;
+    }
+
+    /**
+     * get application config
+     * @return Repository
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * init config Repository
+     * @throws Exception
+     */
+    protected function initConfig()
+    {
+        if (!($this->config instanceof Repository)) {
+            $filePath   = $this->configPath();
+            if (!is_file($filePath)) {
+                throw new Exception("Application config file can not found({$filePath}).");
+            }
+
+            $this->setConfig(new Repository(require $filePath));
+        }
+    }
+
+    /**
+     * init Environment
+     */
+    protected function initEnvironment()
+    {
+        date_default_timezone_set($this->config['timezone']);
+        mb_internal_encoding('UTF-8');
+    }
+
+    /**
      * boot strap application
+     * @throws Exception
      */
     public function bootStrap()
     {
+        $this->initConfig();
+
+        $this->initEnvironment();
     }
 
     /**
@@ -105,5 +159,34 @@ class Application
     public function storagePath()
     {
         return $this->storagePath ? : $this->basePath.DIRECTORY_SEPARATOR.'storage';
+    }
+
+    /**
+     * @return string
+     */
+    public function configPath()
+    {
+        return $this->configPath ? : $this->configPath . DIRECTORY_SEPARATOR . 'config/app.php';
+    }
+
+    /**
+     * set the config path
+     * @param string $configPath
+     */
+    public function setConfigPath($configPath)
+    {
+        $configPath = realpath($configPath);
+        if (is_file($configPath)) {
+            $this->configPath = $configPath;
+        }
+    }
+
+    /**
+     * get version
+     * @return string
+     */
+    public function version()
+    {
+        return self::VERSION;
     }
 }
