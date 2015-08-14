@@ -166,7 +166,7 @@ class Application
      */
     public function configPath()
     {
-        return $this->configPath ? : $this->configPath . DIRECTORY_SEPARATOR . 'config/app.php';
+        return $this->configPath ? : $this->basePath . DIRECTORY_SEPARATOR . 'config/app.php';
     }
 
     /**
