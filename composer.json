@@ -1,48 +1,34 @@
 {
-    "name": "flavor/simple",
-    "description": "The Simple Framework.",
-    "keywords": ["framework", "simple"],
-    "license": "MIT",
-    "homepage": "http://www.zhuyanbin.com",
-    "support": {
-        "issues": "https://github.com/flavorzyb/simple/issues",
-        "source": "https://github.com/flavorzyb/simple"
-    },
+  "name": "simple/framework",
+  "description": "The Simple Framework.",
+  "keywords": ["framework", "simple"],
+  "license": "MIT",
+  "homepage": "http://www.zhuyanbin.com",
+  "authors": [
+    {
+      "name": "Yanbin Zhu",
+      "email": "haker-haker@163.com"
+    }
+  ],
 
-    "authors": [
-        {
-            "name": "Yanbin Zhu",
-            "email": "haker-haker@163.com"
-        }
+  "require": {
+    "php": ">=5.5.0"
+  },
+
+  "require-dev": {
+    "phpunit/phpunit": "~4.0"
+  },
+
+  "autoload": {
+    "classmap": [
     ],
 
-    "require": {
-        "php": ">=5.5.0",
-        "ext-openssl": "*",
-        "ext-mcrypt": "*",
-        "ext-mbstring": "*"
-    },
-    "require-dev": {
-        "aws/aws-sdk-php": "~2.4",
-        "iron-io/iron_mq": "~1.5",
-        "pda/pheanstalk": "~3.0",
-        "predis/predis": "~1.0",
-        "mockery/mockery": "~0.9",
-        "phpunit/phpunit": "~4.0"
-    },
-    "autoload": {
-        "classmap": [
-        ],
-        "files": [
-        ],
-        "psr-4": {
-            "Simple\\": "src/Simple/"
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0-dev"
-        }
-    },
-    "minimum-stability": "dev"
+    "files": [
+      "src/Foundation/helpers.php"
+    ],
+
+    "psr-4": {
+      "Simple\\": "src/"
+    }
+  }
 }
