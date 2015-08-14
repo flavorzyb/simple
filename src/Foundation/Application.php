@@ -86,9 +86,17 @@ class Application
     {
     }
 
+    /**
+     * set the storage path
+     *
+     * @param string $path
+     */
     public function setStoragePath($path)
     {
-
+        $path = realpath($path);
+        if (is_dir($path)) {
+            $this->storagePath = $path;
+        }
     }
 
     /**
