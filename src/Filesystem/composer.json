@@ -21,15 +21,8 @@
   },
 
   "autoload": {
-    "classmap": [
-    ],
-
-    "files": [
-      "src/Foundation/helpers.php"
-    ],
-
     "psr-4": {
-      "Simple\\": "src/"
+      "Simple\\Filesystem\\": ""
     }
   },
 
