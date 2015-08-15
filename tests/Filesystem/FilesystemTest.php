@@ -168,9 +168,53 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($file->lastModified(__FILE__) > 0);
     }
 
+    public function testIsReadable()
+    {
+        $file = new Filesystem();
+        $this->assertTrue($file->isReadable(__FILE__));
+    }
+
+    public function testIsExecutable()
+    {
+        $file = new Filesystem();
+
+        $executeFile = __DIR__.'/file_execute.txt';
+        @unlink($executeFile);
+        file_put_contents($executeFile, 'Hello World');
+
+        $this->assertFalse($file->isExecutable($executeFile));
+
+        clearstatcache();
+        @chmod($executeFile, 0777);
+        $this->assertTrue($file->isExecutable($executeFile));
+        @unlink($executeFile);
+    }
+
     public function testIsDirectory()
     {
         $file = new Filesystem();
         $this->assertTrue($file->isDirectory(__DIR__));
+    }
+
+    public function testMakeDirectoryAndCleanDirectory()
+    {
+        $dir = __DIR__ . '/mytestdir';
+        $file = new Filesystem();
+
+        $file->deleteDirectory($dir);
+        $this->assertTrue($file->makeDirectory($dir));
+
+        $file->deleteDirectory($dir);
+
+        $dir = __DIR__ . '/mytestdir/xxx/333/fff';
+        $file->deleteDirectory($dir);
+        $this->assertFalse($file->makeDirectory($dir, 0755, false, true));
+
+        $file->deleteDirectory($dir);
+        $this->assertTrue($file->makeDirectory($dir, 0755, true));
+        $this->assertEquals(__DIR__ . '/mytestdir/xxx/333', $file->dirName($dir));
+        $file->put($dir.'test.log', 'aaaaaa');
+        $file->cleanDirectory(__DIR__ . '/mytestdir');
+        $file->deleteDirectory($dir);
     }
 }

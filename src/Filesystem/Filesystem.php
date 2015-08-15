@@ -8,6 +8,7 @@
 
 namespace Simple\Filesystem;
 
+use FilesystemIterator;
 
 class Filesystem
 {
@@ -201,7 +202,7 @@ class Filesystem
      */
     public function isDirectory($directory)
     {
-        return is_dir($directory);
+        return is_string($directory) && is_dir($directory);
     }
 
     /**
@@ -212,7 +213,27 @@ class Filesystem
      */
     public function isWritable($path)
     {
-        return is_writable($path);
+        return is_string($path) && is_writable($path);
+    }
+
+    /**
+     * Determine if the given path is readable.
+     * @param $path
+     * @return bool
+     */
+    public function isReadable($path)
+    {
+        return is_string($path) && is_readable($path);
+    }
+
+    /**
+     * Determine if the given path is executable.
+     * @param string $path
+     * @return bool
+     */
+    public function isExecutable($path)
+    {
+        return is_string($path) && is_executable($path);
     }
 
     /**
@@ -223,7 +244,7 @@ class Filesystem
      */
     public function isFile($file)
     {
-        return is_file($file);
+        return is_string($file) && is_file($file);
     }
 
     /**
@@ -236,5 +257,85 @@ class Filesystem
     public function glob($pattern, $flags = 0)
     {
         return glob($pattern, $flags);
+    }
+
+    /**
+     * Returns parent directory's path
+     *
+     * @param string $path
+     * @return string
+     */
+    public function dirName($path)
+    {
+        return dirname($path);
+    }
+
+    /**
+     * Create a directory.
+     *
+     * @param  string  $path
+     * @param  int     $mode
+     * @param  bool    $recursive
+     * @param  bool    $force
+     * @return bool
+     */
+    public function makeDirectory($path, $mode = 0755, $recursive = false, $force = false)
+    {
+        if ($force)
+        {
+            return @mkdir($path, $mode, $recursive);
+        }
+
+        return mkdir($path, $mode, $recursive);
+    }
+
+    /**
+     * Recursively delete a directory.
+     *
+     * The directory itself may be optionally preserved.
+     *
+     * @param  string  $directory
+     * @param  bool    $preserve
+     * @return bool
+     */
+    public function deleteDirectory($directory, $preserve = false)
+    {
+        if ( ! $this->isDirectory($directory)) return false;
+
+        $items = new FilesystemIterator($directory);
+
+        foreach ($items as $item)
+        {
+            // If the item is a directory, we can just recurse into the function and
+            // delete that sub-directory otherwise we'll just delete the file and
+            // keep iterating through each file until the directory is cleaned.
+            if ($item->isDir() && ! $item->isLink())
+            {
+                $this->deleteDirectory($item->getPathname());
+            }
+
+            // If the item is just a file, we can go ahead and delete it since we're
+            // just looping through and waxing all of the files in this directory
+            // and calling directories recursively, so we delete the real path.
+            else
+            {
+                $this->delete($item->getPathname());
+            }
+        }
+
+        if ( ! $preserve) @rmdir($directory);
+
+        return true;
+    }
+
+    /**
+     * Empty the specified directory of all files and folders.
+     *
+     * @param  string  $directory
+     * @return bool
+     */
+    public function cleanDirectory($directory)
+    {
+        return $this->deleteDirectory($directory, true);
     }
 }
