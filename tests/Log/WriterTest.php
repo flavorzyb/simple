@@ -63,7 +63,7 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $fileSystem->shouldReceive("isFile")->andReturn(true);
         $fileSystem->shouldReceive("move")->andReturn(true);
         $fileSystem->shouldReceive("dirName")->andReturn($this->logDir . DIRECTORY_SEPARATOR . date('Y/M'));
-        $fileSystem->shouldReceive("put")->andReturn(true);
+        $fileSystem->shouldReceive("append")->andReturn(true);
         $log        = new Writer($fileSystem);
         $log->setDirPath($this->logDir);
         $this->assertTrue($log->api("this is a test debug"));

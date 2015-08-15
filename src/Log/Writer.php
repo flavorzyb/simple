@@ -96,7 +96,7 @@ class Writer
      * @param string $msg
      * @return boolean
      */
-    private function log($type, $msg)
+    protected function log($type, $msg)
     {
         $msg    = trim($msg);
         if ('' == $msg) {
@@ -137,8 +137,10 @@ class Writer
                 $file   .= "api";
                 $str     = "[api]";
                 break;
+            // @codeCoverageIgnoreStart
             default:
                 return false;
+            // @codeCoverageIgnoreEnd
         }
 
         $file       .= '_' . date('Y_m_d');
@@ -158,7 +160,7 @@ class Writer
 
         $str        .= date('Y-m-d H:i:s') . '|' . $msg . "\n";
 
-        return $filesystem->put($file, $str, true) > 0;
+        return $filesystem->append($file, $str) > 0;
     }
 
     /**

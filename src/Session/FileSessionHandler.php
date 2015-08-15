@@ -87,7 +87,6 @@ class FileSessionHandler implements SessionHandlerInterface
         $files      = $fileSystem->files($this->path);
         $time       = time() - intval($maxLifeTime);
 
-
         foreach ($files as $file) {
             if ($fileSystem->lastModified($file) < $time) {
                 $fileSystem->delete($file);
@@ -154,6 +153,6 @@ class FileSessionHandler implements SessionHandlerInterface
      */
     public function write($session_id, $session_data)
     {
-        return $this->fileSystem->put($this->path.'/'.$session_id, $session_data, true);
+        return $this->fileSystem->put($this->path.'/'.$session_id, $session_data, true) > 0;
     }
 }

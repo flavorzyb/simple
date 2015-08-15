@@ -35,7 +35,8 @@
 
   "autoload-dev": {
     "classmap": [
-      "tests/Cache/StoreTest.php"
+      "tests/Cache/StoreTest.php",
+      "tests/Session/SessionHandlerTest.php"
     ],
 
     "files": [
