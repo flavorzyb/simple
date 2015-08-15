@@ -216,5 +216,6 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
         $file->put($dir.'test.log', 'aaaaaa');
         $file->cleanDirectory(__DIR__ . '/mytestdir');
         $file->deleteDirectory($dir);
+        $file->deleteDirectory(__DIR__ . '/mytestdir');
     }
 }
