@@ -45,6 +45,7 @@ abstract class StoreTest extends \PHPUnit_Framework_TestCase
         $value  = "aaaaa";
 
         $this->assertNull($this->store->get($key));
+        $this->assertTrue($this->store->set($key, $value, 0));
         $this->assertTrue($this->store->set($key, $value, 1000));
         $this->assertEquals($value, $this->store->get($key));
 
@@ -60,6 +61,7 @@ abstract class StoreTest extends \PHPUnit_Framework_TestCase
         $keyArray   = array_keys($dataArray);
 
         $this->assertEquals([], $this->store->mGet($keyArray));
+        $this->assertTrue($this->store->mSet($dataArray, 0));
         $this->assertTrue($this->store->mSet($dataArray, 1000));
         $this->assertEquals($dataArray, $this->store->mGet($keyArray));
     }

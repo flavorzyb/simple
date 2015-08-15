@@ -140,9 +140,8 @@ class Writer
             // @codeCoverageIgnoreStart
             default:
                 return false;
-            // @codeCoverageIgnoreEnd
         }
-
+        // @codeCoverageIgnoreEnd
         $file       .= '_' . date('Y_m_d');
         $target     = $file . '_' . date('His') . '.log';
         $file       .= '.log';

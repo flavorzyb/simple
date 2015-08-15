@@ -22,6 +22,8 @@ class RepositoryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($data['key'], $config['key']);
         $this->assertTrue($config->offsetExists("key"));
+        $config['key3'] = 1231;
+        $this->assertEquals(1231, $config['key3']);
 
         unset($config['key']);
         $this->assertFalse($config->offsetExists('key'));

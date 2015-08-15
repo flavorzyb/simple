@@ -82,7 +82,9 @@ class MemcachedStore implements Store
             return $value;
         }
 
+        // @codeCoverageIgnoreStart
         return null;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
