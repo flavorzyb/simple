@@ -344,9 +344,12 @@ class Filesystem
 
         foreach ($items as $item) {
             if ($item->isFile()) {
-                $result[]   = $item->getPathname();
+                $result[]       = $item->getPathname();
             } elseif ($recursive && $item->isDir() && ! $item->isLink()) {
-                $result     += $this->files($item->getPathname());
+                $subFiles       = $this->files($item->getPathname(), $recursive);
+                foreach ($subFiles as $file) {
+                    $result[]   = $file;
+                }
             }
         }
 

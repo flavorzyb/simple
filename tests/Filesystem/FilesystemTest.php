@@ -218,4 +218,23 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
         $file->deleteDirectory($dir);
         $file->deleteDirectory(__DIR__ . '/mytestdir');
     }
+
+    public function testFilesReturnArray()
+    {
+        $dir = __DIR__ . '/mytestdir';
+        $file = new Filesystem();
+
+        $file->deleteDirectory($dir);
+        $file->makeDirectory($dir);
+        $file->put($dir . '/aaa.txt', 'aaaaa');
+        $file->put($dir . '/bbbb.txt', 'aaaaa');
+
+        $file->makeDirectory($dir.'/abcd');
+        $file->put($dir . '/abcd/bbbb.txt', 'aaaaa');
+        $file->put($dir . '/abcd/ccccc.txt', 'aaaaa');
+
+        $this->assertEquals(2, sizeof($file->files($dir)));
+        $this->assertEquals(4, sizeof($file->files($dir, true)));
+        $file->deleteDirectory($dir);
+    }
 }

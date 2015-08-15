@@ -146,10 +146,6 @@ class Writer
         $file       .= '.log';
 
         // check log file size
-        if ($filesystem->isFile($file)) {
-            var_dump($filesystem->size($file), self::MAX_FILE_SIZE);
-        }
-
         if ($filesystem->isFile($file) && ($filesystem->size($file) > self::MAX_FILE_SIZE)) {
             $filesystem->move($file, $target);
         }
