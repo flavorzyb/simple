@@ -63,7 +63,7 @@ class Writer
      *
      * @return string
      */
-    public function getDirPath()
+    public function dirPath()
     {
         return $this->dirPath;
     }
@@ -76,8 +76,9 @@ class Writer
     public function setDirPath($dirPath)
     {
         $dirPath    = trim($dirPath);
-        $path = $this->filesystem->isDirectory($dirPath);
-        $this->dirPath = $this->filesystem->realPath($path);
+        if ($this->filesystem->isDirectory($dirPath)) {
+            $this->dirPath = $this->filesystem->realPath($dirPath);
+        }
     }
 
     /**
@@ -114,27 +115,27 @@ class Writer
         switch($type) {
             case self::TYPE_DEBUG:
                 $file   .= "debug";
-                $str     = "[debug] ";
+                $str     = "[debug]";
                 break;
             case self::TYPE_INFO:
                 $file   .= "info";
-                $str     = "[info] ";
+                $str     = "[info]";
                 break;
             case self::TYPE_NOTICE:
                 $file   .= "notice";
-                $str     = "[notice] ";
+                $str     = "[notice]";
                 break;
             case self::TYPE_WARNING:
                 $file   .= "warning";
-                $str     = "[warning] ";
+                $str     = "[warning]";
                 break;
             case self::TYPE_ERROR:
                 $file   .= "error";
-                $str     = "[error] ";
+                $str     = "[error]";
                 break;
             case self::TYPE_API:
                 $file   .= "api";
-                $str     = "[api] ";
+                $str     = "[api]";
                 break;
             default:
                 return false;
@@ -145,6 +146,10 @@ class Writer
         $file       .= '.log';
 
         // check log file size
+        if ($filesystem->isFile($file)) {
+            var_dump($filesystem->size($file), self::MAX_FILE_SIZE);
+        }
+
         if ($filesystem->isFile($file) && ($filesystem->size($file) > self::MAX_FILE_SIZE)) {
             $filesystem->move($file, $target);
         }
@@ -155,7 +160,7 @@ class Writer
             $filesystem->makeDirectory($dirPath, 0755, true, true);
         }
 
-        $str        .= date('Y-m-d H:i:s') . ' ' . $msg . "\n";
+        $str        .= date('Y-m-d H:i:s') . '|' . $msg . "\n";
 
         return $filesystem->put($file, $str, true) > 0;
     }
@@ -179,7 +184,7 @@ class Writer
      */
     public function info($msg)
     {
-        return $this->log(self::TYPE_DEBUG, $msg);
+        return $this->log(self::TYPE_INFO, $msg);
     }
 
     /**
@@ -190,7 +195,7 @@ class Writer
      */
     public function notice($msg)
     {
-        return $this->log(self::TYPE_DEBUG, $msg);
+        return $this->log(self::TYPE_NOTICE, $msg);
     }
 
     /**
@@ -201,7 +206,7 @@ class Writer
      */
     public function warning($msg)
     {
-        return $this->log(self::TYPE_DEBUG, $msg);
+        return $this->log(self::TYPE_WARNING, $msg);
     }
 
     /**
@@ -212,7 +217,7 @@ class Writer
      */
     public function error($msg)
     {
-        return $this->log(self::TYPE_DEBUG, $msg);
+        return $this->log(self::TYPE_ERROR, $msg);
     }
 
     /**
@@ -223,6 +228,6 @@ class Writer
      */
     public function api($msg)
     {
-        return $this->log(self::TYPE_DEBUG, $msg);
+        return $this->log(self::TYPE_API, $msg);
     }
 }
