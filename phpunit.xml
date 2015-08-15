@@ -13,19 +13,20 @@
          verbose="true">
     <testsuites>
         <testsuite name="Simple Test Suite">
-            <directory suffix="Test.php">./tests</directory>
+            <directory suffix="Test.php">tests</directory>
+            <exclude>
+                <file>tests/Cache/StoreTest.php</file>
+            </exclude>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./src</directory>
-            <exclude>
-            </exclude>
+            <directory suffix=".php">src</directory>
         </whitelist>
     </filter>
     <logging>
-        <log type="coverage-html" target="./logs/report" charset="UTF-8" highlight="false" lowUpperBound="50" highLowerBound="80"/>
-        <log type="coverage-clover" target="./logs/coverage.xml"/>
-        <log type="coverage-php" target="./logs/coverage.serialized"/>
+        <log type="coverage-html" target="logs/report" charset="UTF-8" highlight="false" lowUpperBound="50" highLowerBound="80"/>
+        <log type="coverage-clover" target="logs/coverage.xml"/>
+        <log type="coverage-php" target="logs/coverage.serialized"/>
     </logging>
 </phpunit>

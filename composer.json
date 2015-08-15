@@ -33,5 +33,17 @@
     }
   },
 
+  "autoload-dev": {
+    "classmap": [
+      "tests/Cache/StoreTest.php"
+    ],
+
+    "files": [
+    ],
+
+    "psr-4": {
+    }
+  },
+
   "minimum-stability": "dev"
 }

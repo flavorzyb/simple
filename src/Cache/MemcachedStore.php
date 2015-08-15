@@ -8,9 +8,34 @@
 
 namespace Simple\Cache;
 
+use Memcached;
 
 class MemcachedStore implements Store
 {
+    /**
+     * The Memcached instance.
+     * @var Memcached
+     */
+    protected $memcached;
+
+    /**
+     * A string that should be prepended to keys.
+     * @var string
+     */
+    protected $prefix;
+
+    /**
+     * Create a new Memcached store.
+     *
+     * @param Memcached $memcached
+     * @param string $prefix
+     */
+    public function __construct(Memcached $memcached, $prefix = '')
+    {
+        $this->memcached = $memcached;
+        $this->prefix = strlen($prefix) > 0 ? $prefix.':' : '';
+    }
+
     /**
      * Retrieve an item from the cache by key.
      *
@@ -19,6 +44,7 @@ class MemcachedStore implements Store
      */
     public function get($key)
     {
+
     }
 
     /**
