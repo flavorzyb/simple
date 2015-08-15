@@ -24,6 +24,7 @@ interface Store
      * @param  string  $key
      * @param  mixed   $value
      * @param  int     $second
+     * @return boolean
      */
     public function set($key, $value, $second);
 
@@ -64,6 +65,7 @@ interface Store
      *
      * @param  string  $key
      * @param  mixed   $value
+     * @return boolean
      */
     public function forever($key, $value);
 

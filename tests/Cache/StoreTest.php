@@ -19,12 +19,25 @@ abstract class StoreTest extends \PHPUnit_Framework_TestCase
      * prefix
      * @var string
      */
-    protected $prefix   = "sc_";
+    protected $prefix   = "sc";
 
     protected function tearDown()
     {
         $this->store->flush();
     }
+
+    /**
+     * @param Store $store
+     */
+    protected function setStore(Store $store)
+    {
+        $this->store = $store;
+    }
+
+    /**
+     * @return Store
+     */
+    abstract protected function getStore();
 
     public function testGetAndSet()
     {
@@ -37,6 +50,8 @@ abstract class StoreTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($this->store->delete($key));
         $this->assertNull($this->store->get($key));
+
+        $this->assertTrue($this->store->forever($key, $value));
     }
 
     public function testMuSetAndGet()
@@ -44,7 +59,7 @@ abstract class StoreTest extends \PHPUnit_Framework_TestCase
         $dataArray  = array(1=>123, 2=>2222, 3=>444);
         $keyArray   = array_keys($dataArray);
 
-        $this->assertNull($this->store->mGet($keyArray));
+        $this->assertEquals([], $this->store->mGet($keyArray));
         $this->assertTrue($this->store->mSet($dataArray, 1000));
         $this->assertEquals($dataArray, $this->store->mGet($keyArray));
     }
@@ -61,6 +76,6 @@ abstract class StoreTest extends \PHPUnit_Framework_TestCase
 
     public function testPrefix()
     {
-        $this->assertEquals($this->prefix, $this->store->getPrefix());
+        $this->assertEquals($this->prefix . '_', $this->store->getPrefix());
     }
 }

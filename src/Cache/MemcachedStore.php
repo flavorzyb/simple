@@ -33,7 +33,7 @@ class MemcachedStore implements Store
     public function __construct(Memcached $memcached, $prefix = '')
     {
         $this->memcached = $memcached;
-        $this->prefix = strlen($prefix) > 0 ? $prefix.':' : '';
+        $this->prefix = strlen($prefix) > 0 ? $prefix . '_' : '';
     }
 
     /**
@@ -44,7 +44,14 @@ class MemcachedStore implements Store
      */
     public function get($key)
     {
+        $value = $this->memcached->get($this->prefix.$key);
 
+        if ($this->memcached->getResultCode() == 0)
+        {
+            return $value;
+        }
+
+        return null;
     }
 
     /**
@@ -53,9 +60,11 @@ class MemcachedStore implements Store
      * @param  string  $key
      * @param  mixed   $value
      * @param  int     $second
+     * @return bool
      */
     public function set($key, $value, $second)
     {
+        return $this->memcached->set($this->prefix.$key, $value, $second);
     }
 
     /**
@@ -66,14 +75,25 @@ class MemcachedStore implements Store
      */
     public function mGet(array $keyArray)
     {
+        if (empty($keyArray)) return [];
+        $value  =   $this->memcached->getMulti($keyArray);
+        if ($this->memcached->getResultCode() == 0)
+        {
+            return $value;
+        }
+
+        return null;
     }
 
     /**
      * @param array $itemArray
      * @param int $expireTime
+     * @return boolean
      */
     public function mSet(array $itemArray, $expireTime)
     {
+        if (empty($itemArray)) return false;
+        return $this->memcached->setMulti($itemArray, $expireTime);
     }
 
     /**
@@ -85,6 +105,7 @@ class MemcachedStore implements Store
      */
     public function increment($key, $value = 1)
     {
+        return $this->memcached->increment($this->prefix.$key, $value);
     }
 
     /**
@@ -96,6 +117,7 @@ class MemcachedStore implements Store
      */
     public function decrement($key, $value = 1)
     {
+        return $this->memcached->decrement($this->prefix.$key, $value);
     }
 
     /**
@@ -103,9 +125,11 @@ class MemcachedStore implements Store
      *
      * @param  string  $key
      * @param  mixed   $value
+     * @return boolean
      */
     public function forever($key, $value)
     {
+        return $this->memcached->set($this->prefix.$key, $value, 0);
     }
 
     /**
@@ -116,6 +140,17 @@ class MemcachedStore implements Store
      */
     public function delete($key)
     {
+        return $this->memcached->delete($this->prefix.$key);
+    }
+
+    /**
+     * Get the underlying Memcached connection.
+     *
+     * @return \Memcached
+     */
+    public function getMemcached()
+    {
+        return $this->memcached;
     }
 
     /**
@@ -123,6 +158,7 @@ class MemcachedStore implements Store
      */
     public function flush()
     {
+        $this->memcached->flush();
     }
 
     /**
@@ -132,5 +168,6 @@ class MemcachedStore implements Store
      */
     public function getPrefix()
     {
+        return $this->prefix;
     }
 }
