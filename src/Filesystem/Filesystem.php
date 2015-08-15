@@ -99,8 +99,6 @@ class Filesystem
      */
     public function delete($path)
     {
-        $path = trim($path);
-
         return unlink($path);
     }
 
@@ -326,6 +324,33 @@ class Filesystem
         if ( ! $preserve) @rmdir($directory);
 
         return true;
+    }
+
+    /**
+     * get all files in directory
+     *
+     * @param string $directory
+     * @param bool $recursive
+     * @return array
+     */
+    public function files($directory, $recursive = false)
+    {
+        $result     = [];
+        $recursive  = boolval($recursive);
+
+        if ( ! $this->isDirectory($directory)) return [];
+
+        $items = new FilesystemIterator($directory);
+
+        foreach ($items as $item) {
+            if ($item->isFile()) {
+                $result[]   = $item->getPathname();
+            } elseif ($recursive && $item->isDir() && ! $item->isLink()) {
+                $result     += $this->files($item->getPathname());
+            }
+        }
+
+        return $result;
     }
 
     /**

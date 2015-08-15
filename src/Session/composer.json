@@ -1,0 +1,26 @@
+{
+  "name": "flavor/simple",
+  "description": "The Simple Framework.",
+  "keywords": ["framework", "simple"],
+  "license": "MIT",
+  "homepage": "http://www.zhuyanbin.com",
+  "authors": [
+    {
+      "name": "Yanbin Zhu",
+      "email": "haker-haker@163.com"
+    }
+  ],
+
+  "require": {
+    "php": ">=5.5.0"
+  },
+
+  "autoload": {
+    "psr-4": {
+      "Simple\\Session\\": ""
+    }
+  },
+
+  "minimum-stability": "dev"
+}
+
