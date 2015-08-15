@@ -8,8 +8,7 @@
 
 namespace Simple\Cache;
 
-
-class StoreTest extends \PHPUnit_Framework_TestCase
+abstract class StoreTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var Store
