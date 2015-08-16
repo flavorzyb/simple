@@ -20,7 +20,7 @@ class SessionManagerTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->config   = new Repository(['lifetime' => 120, 'cookie_httponly' => true]);
+        $this->config   = new Repository(['lifetime' => 1440, 'cookie_httponly' => true]);
     }
 
     public function testFileDriver()
