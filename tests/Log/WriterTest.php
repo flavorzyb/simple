@@ -48,11 +48,12 @@ class WriterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->logDir, $this->log->dirPath());
 
         $this->assertTrue($this->log->debug("this is a test debug"));
-        $this->assertTrue($this->log->info("this is a test debug"));
-        $this->assertTrue($this->log->notice("this is a test debug"));
-        $this->assertTrue($this->log->warning("this is a test debug"));
-        $this->assertTrue($this->log->error("this is a test debug"));
-        $this->assertTrue($this->log->api("this is a test debug"));
+        $this->assertTrue($this->log->info("this is a test info"));
+        $this->assertTrue($this->log->notice("this is a test notice"));
+        $this->assertTrue($this->log->warning("this is a test warning"));
+        $this->assertTrue($this->log->error("this is a test error"));
+        $this->assertTrue($this->log->api("this is a test api"));
+        $this->assertTrue($this->log->db("this is a test db"));
 
         $this->assertFalse($this->log->debug(""));
 

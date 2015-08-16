@@ -36,6 +36,10 @@ class Writer
      * Log Type API
      */
     const TYPE_API      = 600;
+    /**
+     * Log Type Db
+     */
+    const TYPE_DB       = 700;
 
     // 1GB
     const MAX_FILE_SIZE = 1024000000;
@@ -111,7 +115,6 @@ class Writer
         $type       = intval($type);
         $subPath    = sprintf("%s%s%s%s", date('Y'), DIRECTORY_SEPARATOR, date('m'), DIRECTORY_SEPARATOR);
         $file       = $this->dirPath . DIRECTORY_SEPARATOR . $subPath;
-        $str        = "";
         switch($type) {
             case self::TYPE_DEBUG:
                 $file   .= "debug";
@@ -136,6 +139,10 @@ class Writer
             case self::TYPE_API:
                 $file   .= "api";
                 $str     = "[api]";
+                break;
+            case self::TYPE_DB:
+                $file   .= "db";
+                $str     = "[db]";
                 break;
             // @codeCoverageIgnoreStart
             default:
@@ -226,5 +233,15 @@ class Writer
     public function api($msg)
     {
         return $this->log(self::TYPE_API, $msg);
+    }
+
+    /**
+     * write db log
+     * @param string $msg
+     * @return bool
+     */
+    public function db($msg)
+    {
+        return $this->log(self::TYPE_DB, $msg);
     }
 }
