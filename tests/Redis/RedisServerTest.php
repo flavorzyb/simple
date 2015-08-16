@@ -14,6 +14,9 @@ class RedisServerTest extends \PHPUnit_Framework_TestCase
     protected function setAndGet(array $servers)
     {
         $redisServer = new RedisServer($servers);
+        $redisServer->setPrefix("rs_");
+        $this->assertEquals('rs_', $redisServer->getPrefix());
+
         $redisServer->getClient('server1')->set("key", 111);
         $this->assertEquals(111, $redisServer->getClient('server1')->get("key"));
 
@@ -41,6 +44,19 @@ class RedisServerTest extends \PHPUnit_Framework_TestCase
         ];
 
         $this->setAndGet($servers);
+
+        $servers = [
+            ['server'=> '127.0.0.1', 'port'=>6379],
+            ['server'=> '127.0.0.1', 'port'=>6379]
+        ];
+
+        $this->setAndGet($servers);
+
+        $servers = [
+            ['server'=> '127.0.0.1', 'port'=>6379],
+        ];
+
+        $this->setAndGet($servers);
     }
 
     public function testSetAndGetWithPersistent()
@@ -51,6 +67,10 @@ class RedisServerTest extends \PHPUnit_Framework_TestCase
                 ];
 
         $this->setAndGet($servers);
+
+        $redisServer = new RedisServer($servers);
+        $this->assertEquals(2, $redisServer->getServerCount());
+        $this->assertInstanceOf('\Redis', $redisServer->getDefaultClient());
     }
 
     public function testInitThrowException()

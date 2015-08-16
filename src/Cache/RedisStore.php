@@ -8,15 +8,15 @@
 
 namespace Simple\Cache;
 
-use Redis;
+use Simple\Redis\RedisServer;
 
 class RedisStore implements Store
 {
     /**
      * The Redis instance.
-     * @var Redis
+     * @var RedisServer
      */
-    protected $redis    = null;
+    protected $redisServer    = null;
     /**
      * A string that should be prepended to keys.
      * @var string
@@ -24,14 +24,13 @@ class RedisStore implements Store
     protected $prefix   = null;
 
     /**
-     * @param Redis $redis
+     * @param RedisServer $redisServer
      * @param string $prefix
      */
-    public function __construct(Redis $redis, $prefix = '')
+    public function __construct(RedisServer $redisServer, $prefix = '')
     {
-        $this->redis    = $redis;
+        $this->redisServer    = $redisServer;
         $this->prefix   = strlen($prefix) > 0 ? $prefix . '_' : '';
-        $this->redis->_prefix($this->prefix);
     }
 
     /**
@@ -42,7 +41,7 @@ class RedisStore implements Store
      */
     public function get($key)
     {
-        $value  = $this->redis->get($key);
+        $value  = $this->redisServer->getHashClient($key)->get($key);
 
         if (false !== $value) {
             return is_numeric($value) ? $value : unserialize($value);
@@ -68,9 +67,9 @@ class RedisStore implements Store
         }
 
         if ($second > 0) {
-            return $this->redis->setex($key, $second, $value);
+            return $this->redisServer->getHashClient($key)->setex($key, $second, $value);
         } else {
-            return $this->redis->set($key, $value);
+            return $this->redisServer->getHashClient($key)->set($key, $value);
         }
     }
 
@@ -86,12 +85,34 @@ class RedisStore implements Store
 
         $keyArray = array_values($keyArray);
 
-        $dataArray  = $this->redis->getMultiple($keyArray);
         $result     = [];
+        $redisServer    = $this->redisServer;
+        if (1 == $redisServer->getServerCount()) {
+            $dataArray      = $redisServer->getDefaultClient()->getMultiple($keyArray);
+            foreach ($dataArray as $k => $v) {
+                if (false !== $v) {
+                    $result[$keyArray[$k]] = is_numeric($v) ? $v : unserialize($v);
+                }
+            }
+        } else {
+            $clientKeyArray = [];
+            foreach ($keyArray as $key) {
+                $name   = $redisServer->getHashClientName($key);
+                // factory key array for redis
+                if (isset($clientKeyArray[$name])) {
+                    $clientKeyArray[$name][] = $key;
+                } else {
+                    $clientKeyArray[$name] = [$key];
+                }
+            }
 
-        foreach ($dataArray as $k => $v) {
-            if (false !== $v) {
-                $result[$keyArray[$k]] = is_numeric($v) ? $v : unserialize($v);
+            foreach ($clientKeyArray as $name => $keyArray) {
+                $dataArray = $redisServer->getClient($name)->mget($keyArray);
+                foreach ($dataArray as $k => $v) {
+                    if (false !== $v) {
+                        $result[$keyArray[$k]] = is_numeric($v) ? $v : unserialize($v);
+                    }
+                }
             }
         }
 
@@ -107,14 +128,26 @@ class RedisStore implements Store
     {
         if (empty($itemArray)) return false;
 
-        $expireTime = intval($expireTime);
+        $redisServer        = $this->redisServer;
+        $expireTime         = intval($expireTime);
+        $isDefaultClient    = (1 == $redisServer->getServerCount());
+        $defaultClient      = $redisServer->getDefaultClient();
+
         if ($expireTime > 0) {
             foreach ($itemArray as $k => $v) {
-                $this->redis->setex($k, $expireTime, is_numeric($v) ? $v : serialize($v));
+                if ($isDefaultClient) {
+                    $defaultClient->setex($k, $expireTime, is_numeric($v) ? $v : serialize($v));
+                } else {
+                    $redisServer->getHashClient($k)->setex($k, $expireTime, is_numeric($v) ? $v : serialize($v));
+                }
             }
         } else {
             foreach ($itemArray as $k => $v) {
-                $this->redis->set($k, is_numeric($v) ? $v : serialize($v));
+                if ($isDefaultClient) {
+                    $defaultClient->set($k, is_numeric($v) ? $v : serialize($v));
+                } else {
+                    $redisServer->getHashClient($k)->set($k, is_numeric($v) ? $v : serialize($v));
+                }
             }
         }
 
@@ -130,7 +163,7 @@ class RedisStore implements Store
      */
     public function increment($key, $value = 1)
     {
-        return $this->redis->incrBy($key, $value);
+        return $this->redisServer->getHashClient($key)->incrBy($key, $value);
     }
 
     /**
@@ -142,7 +175,7 @@ class RedisStore implements Store
      */
     public function decrement($key, $value = 1)
     {
-        return $this->redis->decrBy($key, $value);
+        return $this->redisServer->getHashClient($key)->decrBy($key, $value);
     }
 
     /**
@@ -154,7 +187,7 @@ class RedisStore implements Store
      */
     public function forever($key, $value)
     {
-        return $this->redis->set($key, $value);
+        return $this->redisServer->getHashClient($key)->set($key, $value);
     }
 
     /**
@@ -165,7 +198,7 @@ class RedisStore implements Store
      */
     public function delete($key)
     {
-        $this->redis->delete($key);
+        $this->redisServer->getHashClient($key)->delete($key);
         return true;
     }
 
@@ -174,16 +207,16 @@ class RedisStore implements Store
      */
     public function flush()
     {
-        $this->redis->flushAll();
+        $this->redisServer->flushAll();
     }
 
     /**
      * get Redis instance
-     * @return Redis
+     * @return RedisServer
      */
-    public function getRedis()
+    public function getRedisServer()
     {
-        return $this->redis;
+        return $this->redisServer;
     }
 
     /**

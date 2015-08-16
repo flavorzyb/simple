@@ -8,20 +8,20 @@
 
 namespace Simple\Cache;
 
-use Redis;
+use Simple\Redis\RedisServer;
 
 class RedisStoreTest extends StoreTest
 {
     /**
-     * @var Redis
+     * @var RedisServer
      */
-    private $redis  = null;
+    private $redisServer  = null;
 
     protected function setUp()
     {
-        $this->redis    = new Redis();
-        $this->redis->connect('127.0.0.1', 6379);
-        $this->setStore(new RedisStore($this->redis, $this->prefix));
+        $servers            = [['server'=> '127.0.0.1', 'port'=>6379], ['server'=> '127.0.0.1', 'port'=>6379]];
+        $this->redisServer  = new RedisServer($servers);
+        $this->setStore(new RedisStore($this->redisServer, $this->prefix));
     }
 
     /**
@@ -34,6 +34,15 @@ class RedisStoreTest extends StoreTest
 
     public function testGetRedis()
     {
-        $this->assertEquals($this->redis, $this->getStore()->getRedis());
+        $this->assertEquals($this->redisServer, $this->getStore()->getRedisServer());
+    }
+
+
+    public function testSingleServer()
+    {
+        $servers            = [['server'=> '127.0.0.1', 'port'=>6379]];
+        $this->redisServer  = new RedisServer($servers);
+        $this->setStore(new RedisStore($this->redisServer, $this->prefix));
+        $this->testMuSetAndMutGet();
     }
 }

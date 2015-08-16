@@ -40,6 +40,12 @@ class RedisServer
      * @var array
      */
     protected $hashArray    = [];
+
+    /**
+     * cache prefix string
+     * @var string
+     */
+    protected $prefix       = "";
     /**
      * create RedisServer instance
      *
@@ -99,6 +105,8 @@ class RedisServer
             throw new RedisException($ex->getMessage(), $ex->getCode());
         }
 
+        $redis->_prefix($this->prefix);
+
         return $redis;
     }
 
@@ -123,6 +131,21 @@ class RedisServer
     }
 
     /**
+     * get server name by hash key
+     * @param $key
+     * @return string
+     */
+    public function getHashClientName($key)
+    {
+        if (1 == $this->getServerCount()) {
+            return $this->defaultName;
+        }
+
+        $count  = intval(sprintf('%u', crc32($key)));
+        return $this->hashArray[$count % sizeof($this->serverArray)];
+    }
+
+    /**
      * get Redis instance by hash key
      *
      * @param string $key
@@ -131,9 +154,53 @@ class RedisServer
      */
     public function getHashClient($key)
     {
-        $count  = intval(sprintf('%u', crc32($key)));
-        $name   = $this->hashArray[$count % sizeof($this->serverArray)];
+        return $this->getClient($this->getHashClientName($key));
+    }
 
-        return $this->getClient($name);
+    /**
+     * the count of redis server
+     * @return int
+     */
+    public function getServerCount()
+    {
+        return sizeof($this->serverArray);
+    }
+
+    /**
+     * get default Redis client
+     * @return Redis
+     */
+    public function getDefaultClient()
+    {
+        return $this->getClient($this->defaultName);
+    }
+
+    /**
+     * get prefix string
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return $this->prefix;
+    }
+
+    /**
+     * set prefix string
+     *
+     * @param $prefix
+     */
+    public function setPrefix($prefix)
+    {
+        $this->prefix   = trim($prefix);
+    }
+
+    /**
+     * Removes all entries from all cache.
+     */
+    public function flushAll()
+    {
+        foreach (array_keys($this->serverArray) as $name) {
+            $this->getClient($name)->flushAll();
+        }
     }
 }

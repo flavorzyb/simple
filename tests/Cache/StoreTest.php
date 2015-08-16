@@ -55,7 +55,7 @@ abstract class StoreTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->store->forever($key, $value));
     }
 
-    public function testMuSetAndGet()
+    public function testMuSetAndMutGet()
     {
         $dataArray  = array(1=>123, 2=>2222, 3=>444);
         $keyArray   = array_keys($dataArray);
