@@ -21,7 +21,7 @@ abstract class SessionHandlerTest extends \PHPUnit_Framework_TestCase
     protected $sessionId        = null;
     protected function setUp()
     {
-        $this->savePath     = __DIR__ . DIRECTORY_SEPARATOR . '../tmp/' . mt_rand();
+        $this->savePath     = TESTING_TMP_PATH . DIRECTORY_SEPARATOR . mt_rand();
         $this->sessionId    = md5(time() . mt_rand());
     }
 

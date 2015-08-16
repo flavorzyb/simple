@@ -11,46 +11,69 @@ namespace Simple\Filesystem;
 
 class FilesystemTest extends \PHPUnit_Framework_TestCase
 {
+    protected $basePath     = TESTING_TMP_PATH;
+
+    /**
+     * @var Filesystem
+     */
+    protected $fileSystem   = null;
+
+    protected function setUp()
+    {
+        $this->fileSystem   = new Filesystem();
+
+        if (!$this->fileSystem->isDirectory($this->basePath)) {
+            $this->fileSystem->makeDirectory($this->basePath, 0755, true);
+        }
+    }
+
+    protected function tearDown()
+    {
+        if ($this->fileSystem->isDirectory($this->basePath)) {
+            $this->fileSystem->deleteDirectory($this->basePath, true);
+        }
+    }
+
     public function testGetRetrievesFiles()
     {
-        file_put_contents(__DIR__.'/file.txt', 'Hello World');
+        file_put_contents($this->basePath . '/file.txt', 'Hello World');
         $files = new Filesystem;
-        $this->assertEquals('Hello World', $files->get(__DIR__.'/file.txt'));
-        @unlink(__DIR__.'/file.txt');
+        $this->assertEquals('Hello World', $files->get($this->basePath .'/file.txt'));
+        @unlink($this->basePath . '/file.txt');
     }
 
     public function testPutStoresFiles()
     {
         $files = new Filesystem;
-        $files->put(__DIR__.'/file.txt', 'Hello World');
-        $this->assertEquals('Hello World', file_get_contents(__DIR__.'/file.txt'));
-        @unlink(__DIR__.'/file.txt');
+        $files->put($this->basePath . '/file.txt', 'Hello World');
+        $this->assertEquals('Hello World', file_get_contents($this->basePath . '/file.txt'));
+        @unlink($this->basePath . '/file.txt');
     }
 
     public function testDeleteRemovesFiles()
     {
-        file_put_contents(__DIR__.'/file.txt', 'Hello World');
+        file_put_contents($this->basePath . '/file.txt', 'Hello World');
         $files = new Filesystem;
-        $files->delete(__DIR__.'/file.txt');
-        $this->assertFileNotExists(__DIR__.'/file.txt');
-        @unlink(__DIR__.'/file.txt');
+        $files->delete($this->basePath . '/file.txt');
+        $this->assertFileNotExists($this->basePath . '/file.txt');
+        @unlink($this->basePath . '/file.txt');
     }
 
     public function testPrependExistingFiles()
     {
         $files = new Filesystem;
-        $files->put(__DIR__.'/file.txt', 'World');
-        $files->prepend(__DIR__.'/file.txt', 'Hello ');
-        $this->assertEquals('Hello World', file_get_contents(__DIR__.'/file.txt'));
-        @unlink(__DIR__.'/file.txt');
+        $files->put($this->basePath . '/file.txt', 'World');
+        $files->prepend($this->basePath . '/file.txt', 'Hello ');
+        $this->assertEquals('Hello World', file_get_contents($this->basePath . '/file.txt'));
+        @unlink($this->basePath . '/file.txt');
     }
 
     public function testPrependNewFiles()
     {
         $files = new Filesystem;
-        $files->prepend(__DIR__.'/file.txt', 'Hello World');
-        $this->assertEquals('Hello World', file_get_contents(__DIR__.'/file.txt'));
-        @unlink(__DIR__.'/file.txt');
+        $files->prepend($this->basePath . '/file.txt', 'Hello World');
+        $this->assertEquals('Hello World', file_get_contents($this->basePath . '/file.txt'));
+        @unlink($this->basePath . '/file.txt');
     }
 
     /**
@@ -59,86 +82,86 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
     {
         $files = new Filesystem;
         $this->setExpectedException('Simple\Filesystem\FileNotFoundException');
-        $files->get(__DIR__.'/unknown-file.txt');
+        $files->get($this->basePath . '/unknown-file.txt');
     }
 
     public function testAppendAddsDataToFile()
     {
-        file_put_contents(__DIR__.'/file.txt', 'foo');
+        file_put_contents($this->basePath . '/file.txt', 'foo');
         $files = new Filesystem;
-        $bytesWritten = $files->append(__DIR__.'/file.txt', 'bar');
+        $bytesWritten = $files->append($this->basePath . '/file.txt', 'bar');
         $this->assertEquals(mb_strlen('bar', '8bit'), $bytesWritten);
-        $this->assertFileExists(__DIR__.'/file.txt');
-        $this->assertStringEqualsFile(__DIR__.'/file.txt', 'foobar');
-        @unlink(__DIR__.'/file.txt');
+        $this->assertFileExists($this->basePath . '/file.txt');
+        $this->assertStringEqualsFile($this->basePath . '/file.txt', 'foobar');
+        @unlink($this->basePath . '/file.txt');
     }
     public function testMoveMovesFiles()
     {
-        file_put_contents(__DIR__.'/foo.txt', 'foo');
+        file_put_contents($this->basePath . '/foo.txt', 'foo');
         $files = new Filesystem;
-        $files->move(__DIR__.'/foo.txt', __DIR__.'/bar.txt');
-        $this->assertFileExists(__DIR__.'/bar.txt');
-        $this->assertFileNotExists(__DIR__.'/foo.txt');
-        @unlink(__DIR__.'/bar.txt');
+        $files->move($this->basePath . '/foo.txt', $this->basePath . '/bar.txt');
+        $this->assertFileExists($this->basePath . '/bar.txt');
+        $this->assertFileNotExists($this->basePath . '/foo.txt');
+        @unlink($this->basePath . '/bar.txt');
     }
     public function testExtensionReturnsExtension()
     {
-        file_put_contents(__DIR__.'/foo.txt', 'foo');
+        file_put_contents($this->basePath . '/foo.txt', 'foo');
         $files = new Filesystem;
-        $this->assertEquals('txt', $files->extension(__DIR__.'/foo.txt'));
-        @unlink(__DIR__.'/foo.txt');
+        $this->assertEquals('txt', $files->extension($this->basePath . '/foo.txt'));
+        @unlink($this->basePath . '/foo.txt');
     }
     public function testTypeIndentifiesFile()
     {
-        file_put_contents(__DIR__.'/foo.txt', 'foo');
+        file_put_contents($this->basePath . '/foo.txt', 'foo');
         $files = new Filesystem;
-        $this->assertEquals('file', $files->type(__DIR__.'/foo.txt'));
-        @unlink(__DIR__.'/foo.txt');
+        $this->assertEquals('file', $files->type($this->basePath . '/foo.txt'));
+        @unlink($this->basePath . '/foo.txt');
     }
 
     public function testTypeIndentifiesDirectory()
     {
-        @mkdir(__DIR__.'/foo');
+        @mkdir($this->basePath . '/foo');
         $files = new Filesystem;
-        $this->assertEquals('dir', $files->type(__DIR__.'/foo'));
-        @rmdir(__DIR__.'/foo');
+        $this->assertEquals('dir', $files->type($this->basePath . '/foo'));
+        @rmdir($this->basePath . '/foo');
     }
 
     public function testSizeOutputsSize()
     {
-        $size = file_put_contents(__DIR__.'/foo.txt', 'foo');
+        $size = file_put_contents($this->basePath . '/foo.txt', 'foo');
         $files = new Filesystem;
-        $this->assertEquals($size, $files->size(__DIR__.'/foo.txt'));
-        @unlink(__DIR__.'/foo.txt');
+        $this->assertEquals($size, $files->size($this->basePath . '/foo.txt'));
+        @unlink($this->basePath . '/foo.txt');
     }
     public function testMimeTypeOutputsMimeType()
     {
-        file_put_contents(__DIR__.'/foo.txt', 'foo');
+        file_put_contents($this->basePath . '/foo.txt', 'foo');
         $files = new Filesystem;
-        $this->assertEquals('text/plain', $files->mimeType(__DIR__.'/foo.txt'));
-        @unlink(__DIR__.'/foo.txt');
+        $this->assertEquals('text/plain', $files->mimeType($this->basePath . '/foo.txt'));
+        @unlink($this->basePath . '/foo.txt');
     }
     public function testIsWritable()
     {
-        file_put_contents(__DIR__.'/foo.txt', 'foo');
+        file_put_contents($this->basePath . '/foo.txt', 'foo');
         $files = new Filesystem;
-        @chmod(__DIR__.'/foo.txt', 0444);
-        $this->assertFalse($files->isWritable(__DIR__.'/foo.txt'));
-        @chmod(__DIR__.'/foo.txt', 0777);
-        $this->assertTrue($files->isWritable(__DIR__.'/foo.txt'));
-        @unlink(__DIR__.'/foo.txt');
+        @chmod($this->basePath . '/foo.txt', 0444);
+        $this->assertFalse($files->isWritable($this->basePath . '/foo.txt'));
+        @chmod($this->basePath . '/foo.txt', 0777);
+        $this->assertTrue($files->isWritable($this->basePath . '/foo.txt'));
+        @unlink($this->basePath . '/foo.txt');
     }
 
     public function testGlobFindsFiles()
     {
-        file_put_contents(__DIR__.'/foo.txt', 'foo');
-        file_put_contents(__DIR__.'/bar.txt', 'bar');
+        file_put_contents($this->basePath . '/foo.txt', 'foo');
+        file_put_contents($this->basePath . '/bar.txt', 'bar');
         $files = new Filesystem;
-        $glob = $files->glob(__DIR__.'/*.txt');
-        $this->assertContains(__DIR__.'/foo.txt', $glob);
-        $this->assertContains(__DIR__.'/bar.txt', $glob);
-        @unlink(__DIR__.'/foo.txt');
-        @unlink(__DIR__.'/bar.txt');
+        $glob = $files->glob($this->basePath . '/*.txt');
+        $this->assertContains($this->basePath . '/foo.txt', $glob);
+        $this->assertContains($this->basePath . '/bar.txt', $glob);
+        @unlink($this->basePath . '/foo.txt');
+        @unlink($this->basePath . '/bar.txt');
     }
 
     public function testRealPath()
@@ -178,7 +201,7 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
     {
         $file = new Filesystem();
 
-        $executeFile = __DIR__.'/file_execute.txt';
+        $executeFile = $this->basePath . '/file_execute.txt';
         @unlink($executeFile);
         file_put_contents($executeFile, 'Hello World');
 
@@ -193,12 +216,12 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
     public function testIsDirectory()
     {
         $file = new Filesystem();
-        $this->assertTrue($file->isDirectory(__DIR__));
+        $this->assertTrue($file->isDirectory($this->basePath));
     }
 
     public function testMakeDirectoryAndCleanDirectory()
     {
-        $dir = __DIR__ . '/mytestdir';
+        $dir = $this->basePath . '/mytestdir';
         $file = new Filesystem();
 
         $file->deleteDirectory($dir);
@@ -206,22 +229,22 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
 
         $file->deleteDirectory($dir);
 
-        $dir = __DIR__ . '/mytestdir/xxx/333/fff';
+        $dir = $this->basePath . '/mytestdir/xxx/333/fff';
         $file->deleteDirectory($dir);
         $this->assertFalse($file->makeDirectory($dir, 0755, false, true));
 
         $file->deleteDirectory($dir);
         $this->assertTrue($file->makeDirectory($dir, 0755, true));
-        $this->assertEquals(__DIR__ . '/mytestdir/xxx/333', $file->dirName($dir));
+        $this->assertEquals($this->basePath . '/mytestdir/xxx/333', $file->dirName($dir));
         $file->put($dir.'test.log', 'aaaaaa');
-        $file->cleanDirectory(__DIR__ . '/mytestdir');
+        $file->cleanDirectory($this->basePath . '/mytestdir');
         $file->deleteDirectory($dir);
-        $file->deleteDirectory(__DIR__ . '/mytestdir');
+        $file->deleteDirectory($this->basePath . '/mytestdir');
     }
 
     public function testFilesReturnArray()
     {
-        $dir = __DIR__ . '/mytestdir';
+        $dir = $this->basePath . '/mytestdir';
         $file = new Filesystem();
 
         $file->deleteDirectory($dir);

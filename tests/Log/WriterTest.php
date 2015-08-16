@@ -22,20 +22,20 @@ class WriterTest extends \PHPUnit_Framework_TestCase
      * @var Filesystem
      */
     private $fileSystem = null;
-    private $logDir     = __DIR__ . DIRECTORY_SEPARATOR . 'test_logs';
+    private $logDir     = TESTING_TMP_PATH . DIRECTORY_SEPARATOR . 'test_logs';
 
     protected function setUp()
     {
         $this->fileSystem   = new Filesystem();
         $this->log          = new Writer($this->fileSystem);
         if (!$this->fileSystem->isDirectory($this->logDir)) {
-            $this->fileSystem->makeDirectory($this->logDir);
+            $this->fileSystem->makeDirectory($this->logDir, 0755, true);
         }
     }
 
     protected function tearDown()
     {
-        $this->fileSystem->deleteDirectory($this->logDir);
+        $this->fileSystem->deleteDirectory(TESTING_TMP_PATH);
     }
 
     public function testLog()

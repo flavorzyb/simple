@@ -24,7 +24,7 @@ class FileSessionHandlerTest extends SessionHandlerTest
     {
         parent::setUp();
         $this->fileSystem   = new Filesystem();
-        $this->path         = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'tmp';
+        $this->path         = TESTING_TMP_PATH;
 
         if (!$this->fileSystem->isDirectory($this->path)) {
             $this->fileSystem->makeDirectory($this->path);
@@ -41,7 +41,7 @@ class FileSessionHandlerTest extends SessionHandlerTest
     public function testGc()
     {
         $fileSystem = m::mock("Simple\\Filesystem\\Filesystem");
-        $fileSystem->shouldReceive("files")->andReturn(array(__DIR__ . '/test1', __DIR__ . '/test2'));
+        $fileSystem->shouldReceive("files")->andReturn(array(TESTING_TMP_PATH . '/test1', TESTING_TMP_PATH . '/test2'));
         $fileSystem->shouldReceive("lastModified")->andReturn(time() - 1000);
         $fileSystem->shouldReceive("delete")->andReturn(true);
 
