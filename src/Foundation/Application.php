@@ -41,6 +41,7 @@ class Application
      * @var string
      */
     protected $storagePath  = null;
+
     /**
      * Application constructor.
      * @param string $basePath
