@@ -19,7 +19,7 @@ class RedisStoreTest extends StoreTest
 
     protected function setUp()
     {
-        $servers            = [['server'=> '127.0.0.1', 'port'=>6379], ['server'=> '127.0.0.1', 'port'=>6379]];
+        $servers            = [['host'=> '127.0.0.1', 'port'=>6379], ['host'=> '127.0.0.1', 'port'=>6379]];
         $this->redisServer  = new RedisServer($servers);
         $this->setStore(new RedisStore($this->redisServer, $this->prefix));
     }
@@ -40,7 +40,7 @@ class RedisStoreTest extends StoreTest
 
     public function testSingleServer()
     {
-        $servers            = [['server'=> '127.0.0.1', 'port'=>6379]];
+        $servers            = [['host'=> '127.0.0.1', 'port'=>6379]];
         $this->redisServer  = new RedisServer($servers);
         $this->setStore(new RedisStore($this->redisServer, $this->prefix));
         $this->testMuSetAndMutGet();

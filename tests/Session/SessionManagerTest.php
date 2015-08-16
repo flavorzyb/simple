@@ -88,12 +88,28 @@ class SessionManagerTest extends \PHPUnit_Framework_TestCase
         $config['prefix']       = "session_";
         $config['expireTime']   = 1200;
         $config['name']         = "session_redis_server";
-        $config['servers']   = [['host'=>'127.0.0.1', 'port'=>11211],['host'=>'127.0.0.1', 'port'=>11211]];
+        $config['servers']   = [['host'=>'127.0.0.1', 'port'=>6379],['host'=>'127.0.0.1', 'port'=>6379]];
 
 
         $manager = new SessionManager(new Repository($config));
 
-        $this->assertTrue($manager->getDriver() instanceof CacheSessionHandler);
+        $this->assertInstanceOf('\SessionHandlerInterface', $manager->getDriver());
         $this->assertInstanceOf('Simple\Cache\RedisStore', $manager->getDriver()->getCache());
+    }
+
+    public function testUnSupportDriver()
+    {
+        $config                 = $this->config->all();
+        $config['driver']       = 'UnSupport';
+        $config['persistent']   = true;
+        $config['prefix']       = "session_";
+        $config['expireTime']   = 1200;
+        $config['name']         = "session_redis_server";
+        $config['servers']   = [['host'=>'127.0.0.1', 'port'=>6379],['host'=>'127.0.0.1', 'port'=>6379]];
+
+
+        $manager = new SessionManager(new Repository($config));
+        $this->setExpectedException('Simple\Session\SessionException');
+        $this->assertInstanceOf('\SessionHandlerInterface', $manager->getDriver());
     }
 }

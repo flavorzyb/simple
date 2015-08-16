@@ -32,28 +32,28 @@ class RedisServerTest extends \PHPUnit_Framework_TestCase
     public function testSetAndGet()
     {
         $servers = [
-            'server1' => ['server'=> '127.0.0.1', 'port'=>6379, 'timeout'=>100],
-            'server2' => ['server'=> '127.0.0.1', 'port'=>6379, 'timeout'=>100]
+            'server1' => ['host'=> '127.0.0.1', 'port'=>6379, 'timeout'=>100],
+            'server2' => ['host'=> '127.0.0.1', 'port'=>6379, 'timeout'=>100]
         ];
 
         $this->setAndGet($servers);
 
         $servers = [
-            'server1' => ['server'=> '127.0.0.1', 'port'=>6379],
-            'server2' => ['server'=> '127.0.0.1', 'port'=>6379]
+            'server1' => ['host'=> '127.0.0.1', 'port'=>6379],
+            'server2' => ['host'=> '127.0.0.1', 'port'=>6379]
         ];
 
         $this->setAndGet($servers);
 
         $servers = [
-            ['server'=> '127.0.0.1', 'port'=>6379],
-            ['server'=> '127.0.0.1', 'port'=>6379]
+            ['host'=> '127.0.0.1', 'port'=>6379],
+            ['host'=> '127.0.0.1', 'port'=>6379]
         ];
 
         $this->setAndGet($servers);
 
         $servers = [
-            ['server'=> '127.0.0.1', 'port'=>6379],
+            ['host'=> '127.0.0.1', 'port'=>6379],
         ];
 
         $this->setAndGet($servers);
@@ -62,8 +62,8 @@ class RedisServerTest extends \PHPUnit_Framework_TestCase
     public function testSetAndGetWithPersistent()
     {
         $servers = [
-            'server1' => ['server'=> '127.0.0.1', 'port'=>6379, 'timeout'=>100, 'persistent'=>true],
-            'server2' => ['server'=> '127.0.0.1', 'port'=>6379, 'timeout'=>100, 'persistent'=>true]
+            'server1' => ['host'=> '127.0.0.1', 'port'=>6379, 'timeout'=>100, 'persistent'=>true],
+            'server2' => ['host'=> '127.0.0.1', 'port'=>6379, 'timeout'=>100, 'persistent'=>true]
                 ];
 
         $this->setAndGet($servers);
@@ -76,7 +76,7 @@ class RedisServerTest extends \PHPUnit_Framework_TestCase
     public function testInitThrowException()
     {
         $servers = [
-            'server1' => ['server'=> '127.0.0.1', 'port'=>6309, 'timeout'=> 1],
+            'server1' => ['host'=> '127.0.0.1', 'port'=>6309, 'timeout'=> 1],
         ];
 
         $this->setExpectedException('Simple\Redis\RedisException');
@@ -96,7 +96,7 @@ class RedisServerTest extends \PHPUnit_Framework_TestCase
     public function testMissServerPort()
     {
         $servers = [
-            'server1' => ['server'=> '127.0.0.1', 'port_int'=>6309],
+            'server1' => ['host'=> '127.0.0.1', 'port_int'=>6309],
         ];
 
         $this->setExpectedException('Simple\Redis\RedisException');

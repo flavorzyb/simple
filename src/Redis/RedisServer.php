@@ -59,7 +59,7 @@ class RedisServer
         }
 
         foreach ($serverArray as $key => $server) {
-            if (!isset($server['server'])) {
+            if (!isset($server['host'])) {
                 throw new RedisException("Redis Server must contain server name");
             }
 
@@ -84,7 +84,7 @@ class RedisServer
      */
     protected function createClient(Repository $config)
     {
-        $server     = trim($config['server']);
+        $server     = trim($config['host']);
         $port       = intval($config['port']);
         $timeout    = floatval($config['timeout']);
         $persistent = boolval($config['persistent']);

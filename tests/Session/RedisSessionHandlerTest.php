@@ -8,9 +8,8 @@
 
 namespace Simple\Session;
 
-use Redis;
-
 use Simple\Cache\RedisStore;
+use Simple\Redis\RedisServer;
 
 class RedisSessionHandlerTest extends SessionHandlerTest
 {
@@ -19,10 +18,10 @@ class RedisSessionHandlerTest extends SessionHandlerTest
     protected function setUp()
     {
         parent::setUp();
-        $redis  = new Redis();
-        $redis->connect("127.0.0.1", 6379);
 
-        $this->redis    = new RedisStore($redis, "session_");
+        $redisServer = new RedisServer([['host'=> '127.0.0.1', 'port'=>6379], ['host'=> '127.0.0.1', 'port'=>6379]]);
+
+        $this->redis    = new RedisStore($redisServer, "session_");
         $this->setSessionHandler(new CacheSessionHandler($this->redis, 1200));
     }
 

@@ -13,8 +13,10 @@ use Redis;
 use Exception;
 
 use Simple\Cache\MemcachedStore;
+use Simple\Cache\RedisStore;
 use Simple\Config\Repository;
 use Simple\Helper\Helper;
+use Simple\Redis\RedisServer;
 
 class SessionManager
 {
@@ -95,27 +97,19 @@ class SessionManager
         $prefix         = trim($this->config['prefix']);
         $expireTime     = intval($this->config['expireTime']);
 
-        try {
-            $redis  = new Redis();
-
-            if ($persistent) {
-                $redis->pconnect();
-            } else {
-                $memcached  = new Memcached();
+        if ($persistent) {
+            foreach ($serverArray as $k => $v)
+            {
+                $v['persistent']    = true;
+                $serverArray[$k]    = $v;
             }
-
-            if (!sizeof($memcached->getServerList())) {
-                $memcached->addServers($serverArray);
-            }
-
-            $store = new MemcachedStore($memcached, $prefix);
-            return new CacheSessionHandler($store, $expireTime);
-        } catch (Exception $ex) {
-            throw new SessionException($ex->getMessage(), $ex->getCode());
         }
 
-        return null;
+        $redisServer    = new RedisServer($serverArray);
+        $redisStore     = new RedisStore($redisServer, $prefix);
+        return new CacheSessionHandler($redisStore, $expireTime);
     }
+
     /**
      * get session driver
      *
@@ -136,8 +130,10 @@ class SessionManager
                 $this->driver   = $this->createMemcacheDriver();
                 break;
             case "redis":
+                $this->driver   = $this->createRedisDriver();
                 break;
             default:
+                throw new SessionException("Driver [{$this->config['driver']}] not supported.");
         }
 
         return $this->driver;
