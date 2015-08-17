@@ -38,11 +38,29 @@ class Application
     protected $configPath   = null;
 
     /**
-     * controller directory path
+     * application name space
      *
      * @var string
      */
-    protected $controllerPath   = null;
+    protected $appNameSpace = "apps";
+
+    /**
+     * default controller name
+     * @var string
+     */
+    protected $defaultController    = "Index";
+
+    /**
+     * default method name
+     * @var string
+     */
+    protected $defaultMethod        = "index";
+
+    /**
+     * sub module
+     * @var string
+     */
+    protected $subModule            = "";
 
     /**
      * Application constructor.
@@ -53,31 +71,26 @@ class Application
         $path = realpath($basePath);
         if (is_dir($path)) {
             $this->setBasePath($path);
-            $this->setControllerPath($this->getAppPath() . DIRECTORY_SEPARATOR . 'Controller');
         }
     }
 
     /**
-     * set controller root directory path
-     *
-     * @param $path
-     * @return void
-     */
-    public function setControllerPath($path)
-    {
-        $path = realpath($path);
-        if (is_dir($path)) {
-            $this->controllerPath = $path;
-        }
-    }
-
-    /**
-     * get controller root directory path
+     * get application name space
      * @return string
      */
-    public function getControllerPath()
+    public function getAppNameSpace()
     {
-        return $this->controllerPath;
+        return $this->appNameSpace;
+    }
+
+    /**
+     * set application name space
+     * @param string $appNameSpace
+     * @return void
+     */
+    public function setAppNameSpace($appNameSpace)
+    {
+        $this->appNameSpace = $appNameSpace;
     }
 
     /**
@@ -161,21 +174,131 @@ class Application
     }
 
     /**
+     * get default controller name
+     *
+     * @return string
+     */
+    public function getDefaultController()
+    {
+        return $this->defaultController;
+    }
+
+    /**
+     * set default controller name
+     * @param string $defaultController
+     */
+    public function setDefaultController($defaultController)
+    {
+        $this->defaultController = $defaultController;
+    }
+
+    /**
+     * get default method name
+     *
+     * @return string
+     */
+    public function getDefaultMethod()
+    {
+        return $this->defaultMethod;
+    }
+
+    /**
+     * set default method
+     * @param string $defaultMethod
+     */
+    public function setDefaultMethod($defaultMethod)
+    {
+        $this->defaultMethod = $defaultMethod;
+    }
+
+    /**
+     * get sub module
+     * @return string
+     */
+    public function getSubModule()
+    {
+        return $this->subModule;
+    }
+
+    /**
+     * set sub module
+     *
+     * @param string $subModule
+     */
+    public function setSubModule($subModule)
+    {
+        $this->subModule = $subModule;
+    }
+
+    /**
      *
      */
     protected function parseRequestUri()
     {
-        if (isset($_SERVER['REQUEST_URI'])) {
+        $result = ['controller'=> $this->defaultController, 'method' => $this->getDefaultMethod(), 'params' => []];
 
+        if (isset($_SERVER['REQUEST_URI'])) {
+            $requestUri     = $_SERVER['REQUEST_URI'];
+            $queryStr       = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
+            $queryStrLen    =strlen($queryStr);
+            if ($queryStrLen > 0) {
+                $requestUri = substr($requestUri, 0, -1 - $queryStrLen);
+            }
+
+            $data   = explode('/', $requestUri);
+
+            if (isset($data[1]) && ("index.php" != strtolower($data[1]))) {
+                $result['controller']   = $data[1];
+            }
+
+            if (isset($data[2])) {
+                $result['method']   = $data[2];
+            }
+
+            $size   = sizeof($data);
+            $params = [];
+            if ($size > 2) {
+                for ($i = 3; $i < $size; $i ++) {
+                    $params[] = $data[$i];
+                }
+            }
+
+            $result['params']   = $params;
         }
 
-        return ['controller'=> '', 'method' => '', 'params' => []];
+        return $result;
     }
     /**
      * run the application
      */
     public function run()
     {
+        $data       = $this->parseRequestUri();
+        $controller = $data['controller'];
+        $method     = $data['method'];
+        $params     = $data['params'];
+
+        $subModule  = $this->subModule;
+        if ("" != $subModule) {
+            $subModule = "\\" . $subModule;
+        }
+
+        $class      = sprintf("%s\\Controller%s\\%sController", $this->appNameSpace, $subModule, $controller);
+
+        if (!(class_exists($class) && method_exists($class, $method))) {
+            $this->fileNotFound();
+        } else {
+            $class  = new $class;
+            call_user_func_array(array($class, $method), $params);
+        }
+    }
+
+    public function fileNotFound()
+    {
+        if ("cli" != PHP_SAPI) {
+            header('HTTP/1.1 404 Not Found');
+            exit('404 Not Found');
+        }
     }
 
     /**

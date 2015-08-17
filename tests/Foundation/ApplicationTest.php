@@ -42,22 +42,37 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->basePath, $this->app->getBasePath());
         $this->assertEquals($this->basePath . DIRECTORY_SEPARATOR . 'config/app.php', $this->app->configPath());
         $this->assertNull($this->app->getConfig());
-        $this->assertEquals($this->basePath . DIRECTORY_SEPARATOR . 'storage', $this->app->storagePath());
         $this->assertEquals($this->basePath . DIRECTORY_SEPARATOR . 'app', $this->app->getAppPath());
 
         $this->assertEquals(Application::VERSION, $this->app->version());
-
-        $storagePath = realpath($this->basePath . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'logs');
-        $this->app->setStoragePath($storagePath);
-        $this->assertEquals($storagePath, $this->app->storagePath());
     }
 
     public function testRun()
     {
+        // empty for request uri
         $config = new Repository(require __DIR__ . '/../config/app.php');
         $this->app->setConfig($config);
         $this->assertEquals($config, $this->app->getConfig());
         $this->app->bootStrap();
+        $this->app->run();
+//
+        // request uri = index.php
+        $_SERVER['REQUEST_URI'] = '/index.php';
+        $_SERVER['QUERY_STRING'] = '';
+        $this->app->run();
+
+        // request uri = /index.php?id=11223&code=123
+        $_SERVER['REQUEST_URI'] = '/index.php?id=11223&code=123';
+        $_SERVER['QUERY_STRING'] = 'id=11223&code=123';
+        $this->app->run();
+
+        // request uri = /index.php/aaa/bb?id=11223&code=123
+        $_SERVER['REQUEST_URI'] = '/index.php/aaa/bb?id=11223&code=123';
+        $_SERVER['QUERY_STRING'] = 'id=11223&code=123';
+        $this->app->run();
+
+        $_SERVER['REQUEST_URI'] = '/aaa/bbb/11/23/44?id=87&code=89';
+        $_SERVER['QUERY_STRING'] = 'id=87&code=89';
         $this->app->run();
     }
 
