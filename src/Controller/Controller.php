@@ -40,7 +40,7 @@ abstract class Controller
     /**
      * set template engine
      *
-     * @param Smarty $engine
+     * @param mixed $engine
      * @return void
      */
     public function setTemplateEngine($engine)
