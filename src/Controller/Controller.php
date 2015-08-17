@@ -15,12 +15,67 @@ abstract class Controller
     /**
      * @var Smarty
      */
-    protected $templateEngine = null;
+    protected $templateEngine   = null;
 
-    public function __construct()
+    /**
+     * view resource path
+     * @var string
+     */
+    protected $resourcePath     = null;
+
+    /**
+     * view compile path
+     * @var string
+     */
+    protected $compilePath   = null;
+
+    /**
+     * @param null $resourcePath
+     */
+    public function __construct($resourcePath = null)
     {
+        $this->resourcePath = $resourcePath;
     }
 
+    /**
+     * set resource path
+     * @param string $resourcePath
+     * @return void
+     */
+    public function setResourcePath($resourcePath)
+    {
+        $this->resourcePath = $resourcePath;
+    }
+
+    /**
+     * get resource path
+     *
+     * @return string
+     */
+    public function getResourcePath()
+    {
+        return $this->resourcePath;
+    }
+
+    /**
+     * set resource compile path
+     *
+     * @param string $path
+     * @return void
+     */
+    public function setCompilePath($path)
+    {
+        $this->compilePath  = $path;
+    }
+
+    /**
+     * get resource compile path
+     * @return string
+     */
+    public function getCompilePath()
+    {
+        return $this->compilePath;
+    }
     /**
      * get default template engine
      *
@@ -33,6 +88,7 @@ abstract class Controller
         $smarty->caching            = false;
         $smarty->left_delimiter     = '{|';
         $smarty->right_delimiter    = '|}';
+        $smarty->setTemplateDir($this->resourcePath);
 
         return $smarty;
     }

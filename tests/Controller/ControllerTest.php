@@ -23,5 +23,13 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $obj = new \stdClass();
         $controller->setTemplateEngine($obj);
         $this->assertEquals($obj, $controller->getTemplateEngine());
+
+        $this->assertNull($controller->getResourcePath());
+        $controller->setResourcePath(__DIR__);
+        $this->assertEquals(__DIR__, $controller->getResourcePath());
+
+        $this->assertNull($controller->getCompilePath());
+        $controller->setCompilePath(__DIR__);
+        $this->assertEquals(__DIR__, $controller->getCompilePath());
     }
 }
