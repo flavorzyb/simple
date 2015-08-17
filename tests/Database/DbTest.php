@@ -136,4 +136,23 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
         $this->db->usePdo('error_name');
     }
+
+    public function testDisconnect()
+    {
+        $this->db->getPdo('read');
+        $this->db->getPdo('write');
+
+        $this->db->usePdo('read');
+        $this->assertInstanceOf('\PDO', $this->db->getActivePdo());
+        $this->db->disconnect('read');
+        $this->assertNull($this->db->getActivePdo());
+
+
+        $this->db->usePdo('write');
+        $this->assertInstanceOf('\PDO', $this->db->getActivePdo());
+        $this->db->disconnect('write');
+        $this->assertNull($this->db->getActivePdo());
+    }
+
+
 }

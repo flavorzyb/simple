@@ -285,11 +285,18 @@ class Db
      * disconnect pdo by name
      *
      * @param string $name
-     * @return boolean
      * @throws DbException
      */
     public function disconnect($name)
     {
+        if (isset($this->pdoArray[$name])) {
+            $pdo    = $this->pdoArray[$name];
+            if ($this->activePdo == $pdo) {
+                $this->activePdo = null;
+            }
+
+            unset($this->pdoArray[$name]);
+        }
     }
 
     /**
