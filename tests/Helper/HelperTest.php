@@ -10,6 +10,7 @@ namespace Simple\Helper;
 
 
 use Simple\Filesystem\Filesystem;
+use Simple\Log\Writer;
 
 class HelperTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,5 +18,11 @@ class HelperTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue(Helper::getFileSystem() instanceof Filesystem);
         $this->assertTrue(Helper::getFileSystem() instanceof Filesystem);
+    }
+
+    public function testLogWriter()
+    {
+        $this->assertTrue(Helper::getLogWriter() instanceof Writer);
+        $this->assertTrue(Helper::getLogWriter() instanceof Writer);
     }
 }

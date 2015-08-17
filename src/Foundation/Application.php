@@ -36,11 +36,13 @@ class Application
      * @var string
      */
     protected $configPath   = null;
+
     /**
-     * the storage path
+     * controller directory path
+     *
      * @var string
      */
-    protected $storagePath  = null;
+    protected $controllerPath   = null;
 
     /**
      * Application constructor.
@@ -51,14 +53,38 @@ class Application
         $path = realpath($basePath);
         if (is_dir($path)) {
             $this->setBasePath($path);
+            $this->setControllerPath($this->getAppPath() . DIRECTORY_SEPARATOR . 'Controller');
         }
+    }
+
+    /**
+     * set controller root directory path
+     *
+     * @param $path
+     * @return void
+     */
+    public function setControllerPath($path)
+    {
+        $path = realpath($path);
+        if (is_dir($path)) {
+            $this->controllerPath = $path;
+        }
+    }
+
+    /**
+     * get controller root directory path
+     * @return string
+     */
+    public function getControllerPath()
+    {
+        return $this->controllerPath;
     }
 
     /**
      * Get the path to the application "app" directory.
      * @return string
      */
-    public function appPath()
+    public function getAppPath()
     {
         return $this->basePath . DIRECTORY_SEPARATOR . 'app';
     }
@@ -135,31 +161,21 @@ class Application
     }
 
     /**
+     *
+     */
+    protected function parseRequestUri()
+    {
+        if (isset($_SERVER['REQUEST_URI'])) {
+
+        }
+
+        return ['controller'=> '', 'method' => '', 'params' => []];
+    }
+    /**
      * run the application
      */
     public function run()
     {
-    }
-
-    /**
-     * set the storage path
-     *
-     * @param string $path
-     */
-    public function setStoragePath($path)
-    {
-        $path = realpath($path);
-        if (is_dir($path)) {
-            $this->storagePath = $path;
-        }
-    }
-
-    /**
-     * Get the path to the storage directory.
-     */
-    public function storagePath()
-    {
-        return $this->storagePath ? : $this->basePath.DIRECTORY_SEPARATOR.'storage';
     }
 
     /**

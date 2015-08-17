@@ -43,7 +43,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->basePath . DIRECTORY_SEPARATOR . 'config/app.php', $this->app->configPath());
         $this->assertNull($this->app->getConfig());
         $this->assertEquals($this->basePath . DIRECTORY_SEPARATOR . 'storage', $this->app->storagePath());
-        $this->assertEquals($this->basePath . DIRECTORY_SEPARATOR . 'app', $this->app->appPath());
+        $this->assertEquals($this->basePath . DIRECTORY_SEPARATOR . 'app', $this->app->getAppPath());
 
         $this->assertEquals(Application::VERSION, $this->app->version());
 

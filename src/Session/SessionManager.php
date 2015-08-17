@@ -151,7 +151,7 @@ class SessionManager
     /**
      * get session driver
      *
-     * @return SessionHandlerInterface
+     * @return \SessionHandlerInterface
      * @throws SessionException
      */
     public function getDriver()
@@ -174,8 +174,17 @@ class SessionManager
                 throw new SessionException("Driver [{$this->config['driver']}] not supported.");
         }
 
-        $this->setOptions($this->config->all());
-        session_set_save_handler($this->driver, false);
         return $this->driver;
+    }
+
+    /**
+     * init session handler
+     *
+     * @throws SessionException
+     */
+    public function init()
+    {
+        session_set_save_handler($this->getDriver(), false);
+        $this->setOptions($this->config->all());
     }
 }

@@ -10,6 +10,7 @@ namespace Simple\Helper;
 
 
 use Simple\Filesystem\Filesystem;
+use Simple\Log\Writer;
 
 class Helper
 {
@@ -28,5 +29,20 @@ class Helper
 
         self::$class['fileSystem'] = new Filesystem();
         return self::$class['fileSystem'];
+    }
+
+    /**
+     * log writer instance
+     *
+     * @return Writer
+     */
+    public static function getLogWriter()
+    {
+        if (isset(self::$class['logWriter'])) {
+            return self::$class['logWriter'];
+        }
+
+        self::$class['logWriter'] = new Writer(self::getFileSystem());
+        return self::$class['logWriter'];
     }
 }
