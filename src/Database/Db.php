@@ -307,6 +307,10 @@ class Db
      */
     public function reconnect($name)
     {
+        if (isset($this->connections[$name])) {
+            $this->disconnect($name);
+            $this->usePdo($name);
+        }
     }
 
     /**
@@ -314,11 +318,14 @@ class Db
      *
      * @param string $query
      * @param array $bindings
-     * @return mixed
+     * @return array
      * @throws DbException
      */
     public function selectOne($query, $bindings = array())
     {
+        $query .= " LIMIT 1;";
+        $result = $this->select($query, $bindings);
+        return (isset($result[0]) ? $result[0] : []);
     }
 
     /**
@@ -331,6 +338,13 @@ class Db
      */
     public function select($query, $bindings = array())
     {
+        $statement  = $this->getActivePdo()->prepare($query);
+
+        if ($statement->execute($bindings)) {
+            return $statement->fetchAll($this->fetchMode);
+        }
+
+        throw new DbException("Db execute fail [{$query}]");
     }
 
     /**
@@ -343,6 +357,35 @@ class Db
      */
     public function insert($query, $bindings = array())
     {
+        return $this->statement($query, $bindings);
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.1.0, PECL pdo &gt;= 0.1.0)<br/>
+     * Returns the ID of the last inserted row or sequence value
+     * @link http://php.net/manual/en/pdo.lastinsertid.php
+     * @param string $name [optional] <p>
+     * Name of the sequence object from which the ID should be returned.
+     * </p>
+     * @return string If a sequence name was not specified for the <i>name</i>
+     * parameter, <b>PDO::lastInsertId</b> returns a
+     * string representing the row ID of the last row that was inserted into
+     * the database.
+     * </p>
+     * <p>
+     * If a sequence name was specified for the <i>name</i>
+     * parameter, <b>PDO::lastInsertId</b> returns a
+     * string representing the last value retrieved from the specified sequence
+     * object.
+     * </p>
+     * <p>
+     * If the PDO driver does not support this capability,
+     * <b>PDO::lastInsertId</b> triggers an
+     * IM001 SQLSTATE.
+     */
+    public function lastInsertId($name = null)
+    {
+        return $this->getActivePdo()->lastInsertId($name);
     }
 
     /**
@@ -355,6 +398,7 @@ class Db
      */
     public function update($query, $bindings = array())
     {
+        return $this->affectingStatement($query, $bindings);
     }
 
     /**
@@ -367,6 +411,7 @@ class Db
      */
     public function delete($query, $bindings = array())
     {
+        return $this->affectingStatement($query, $bindings);
     }
 
     /**
@@ -377,8 +422,11 @@ class Db
      * @return bool
      * @throws DbException
      */
-    public function statement($query, $bindings = array())
+    protected function statement($query, $bindings = array())
     {
+        $statement  = $this->getActivePdo()->prepare($query);
+
+        return $statement->execute($bindings);
     }
 
     /**
@@ -389,8 +437,13 @@ class Db
      * @return int
      * @throws DbException
      */
-    public function affectingStatement($query, $bindings = array())
+    protected function affectingStatement($query, $bindings = array())
     {
+        $statement  = $this->getActivePdo()->prepare($query);
+
+        $statement->execute($bindings);
+
+        return $statement->rowCount();
     }
 
     /**
@@ -401,6 +454,7 @@ class Db
      */
     public function beginTransaction()
     {
+        $this->getActivePdo()->beginTransaction();
     }
 
     /**
@@ -411,6 +465,7 @@ class Db
      */
     public function commit()
     {
+        $this->getActivePdo()->commit();
     }
 
     /**
@@ -420,5 +475,6 @@ class Db
      */
     public function rollBack()
     {
+        $this->getActivePdo()->rollBack();
     }
 }
