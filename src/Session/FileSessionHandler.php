@@ -30,8 +30,8 @@ class FileSessionHandler implements SessionHandlerInterface
 
     /**
      * FileSessionHandler constructor.
-     * @param Filesystem $filesystem
-     * @param string $path
+     * @param   Filesystem  $filesystem
+     * @param   string      $path
      */
     public function __construct(Filesystem $filesystem, $path)
     {
@@ -126,8 +126,7 @@ class FileSessionHandler implements SessionHandlerInterface
      */
     public function read($sessionId)
     {
-        if ($this->fileSystem->exists($path = $this->path.'/'.$sessionId))
-        {
+        if ($this->fileSystem->exists($path = $this->path.'/'.$sessionId)) {
             return $this->fileSystem->get($path);
         }
 

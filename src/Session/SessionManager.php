@@ -9,7 +9,6 @@
 namespace Simple\Session;
 
 use Memcached;
-use Redis;
 use Exception;
 
 use Simple\Cache\MemcachedStore;
@@ -125,6 +124,11 @@ class SessionManager
         return null;
     }
 
+    /**
+     * create redis server driver
+     *
+     * @return CacheSessionHandler
+     */
     protected function createRedisDriver()
     {
         $serverArray    = $this->config['servers'];
@@ -133,8 +137,7 @@ class SessionManager
         $expireTime     = intval($this->config['lifetime']);
 
         if ($persistent) {
-            foreach ($serverArray as $k => $v)
-            {
+            foreach ($serverArray as $k => $v) {
                 $v['persistent']    = true;
                 $serverArray[$k]    = $v;
             }

@@ -46,8 +46,7 @@ class MemcachedStore implements Store
     {
         $value = $this->memcached->get($this->prefix.$key);
 
-        if ($this->memcached->getResultCode() == 0)
-        {
+        if ($this->memcached->getResultCode() == 0) {
             return $value;
         }
 
@@ -77,8 +76,7 @@ class MemcachedStore implements Store
     {
         if (empty($keyArray)) return [];
         $value  =   $this->memcached->getMulti($keyArray);
-        if ($this->memcached->getResultCode() == 0)
-        {
+        if ($this->memcached->getResultCode() == 0) {
             return $value;
         }
 
