@@ -10,6 +10,7 @@ namespace Simple\Foundation;
 
 
 use Simple\Config\Repository;
+use Simple\Environment\DotEnv;
 
 class Application
 {
@@ -61,6 +62,13 @@ class Application
      * @var string
      */
     protected $subModule            = "";
+
+    /**
+     * env file path
+     *
+     * @var string
+     */
+    protected $envFile              = "";
 
     /**
      * Application constructor.
@@ -154,12 +162,58 @@ class Application
     }
 
     /**
+     * get env file
+     * @return string
+     */
+    public function getEnvFile()
+    {
+        return ($this->envFile ? : '.env');
+    }
+
+    /**
+     * set env file
+     * @param string $envFile
+     */
+    public function setEnvFile($envFile)
+    {
+        $this->envFile = $envFile;
+    }
+
+    /**
      * init Environment
      */
     protected function initEnvironment()
     {
         date_default_timezone_set($this->config['timezone']);
         mb_internal_encoding('UTF-8');
+
+        if (is_file($this->getEnvFile())) {
+            $env = new DotEnv($this->basePath, $this->getEnvFile(), true);
+            $env->load();
+        }
+    }
+
+    /**
+     * load env from file do not override
+     */
+    protected function loadEnvironment()
+    {
+        $file = $this->basePath . DIRECTORY_SEPARATOR . $this->getEnvFile();
+        if (is_file($file)) {
+            $env = new DotEnv($this->basePath, $this->getEnvFile(), true);
+            $env->load();
+        }
+    }
+    /**
+     * load env from file override
+     */
+    protected function overloadEnvironment()
+    {
+        $file = $this->basePath . DIRECTORY_SEPARATOR . $this->getEnvFile();
+        if (is_file($file)) {
+            $env = new DotEnv($this->basePath, $this->getEnvFile(), false);
+            $env->load();
+        }
     }
 
     /**
