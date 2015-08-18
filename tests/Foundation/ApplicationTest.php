@@ -55,6 +55,12 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($config, $this->app->getConfig());
         $this->app->bootStrap();
         $this->app->run();
+
+        // request uri = index.php
+        $_SERVER['REQUEST_URI'] = '/';
+        $_SERVER['QUERY_STRING'] = '';
+        $this->app->run();
+
 //
         // request uri = index.php
         $_SERVER['REQUEST_URI'] = '/index.php';

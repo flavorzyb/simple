@@ -285,6 +285,31 @@ class Application
     }
 
     /**
+     * chop '//'
+     *
+     * @param string $uri
+     * @return string
+     */
+    protected function chopUri($uri)
+    {
+        if (false === stripos($uri, '//')) {
+            return $uri;
+        }
+
+        return str_ireplace('//', '/', $uri);
+    }
+
+    protected function chopIndex($uri)
+    {
+        $subStr = strtolower(substr($uri,0, 10));
+        if ("/index.php" == $subStr) {
+            return (strlen($uri) > 10 ? substr($uri, 10) : '');
+        }
+
+        return $uri;
+    }
+
+    /**
      *
      */
     protected function parseRequestUri()
@@ -299,9 +324,12 @@ class Application
                 $requestUri = substr($requestUri, 0, -1 - $queryStrLen);
             }
 
+            $requestUri = $this->chopUri($requestUri);
+            $requestUri = $this->chopIndex($requestUri);
+
             $data   = explode('/', $requestUri);
 
-            if (isset($data[1]) && ("index.php" != strtolower($data[1]))) {
+            if (isset($data[1]) && ("index.php" != strtolower($data[1])) && ('' != $data[1])) {
                 $result['controller']   = $data[1];
             }
 
