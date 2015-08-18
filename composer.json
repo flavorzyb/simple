@@ -26,6 +26,7 @@
     ],
 
     "files": [
+      "src/Foundation/helpers.php"
     ],
 
     "psr-4": {
@@ -40,7 +41,6 @@
     ],
 
     "files": [
-      "src/Foundation/helpers.php"
     ],
 
     "psr-4": {
