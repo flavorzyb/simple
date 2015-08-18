@@ -23,8 +23,26 @@ class DotEnv
         $this->filePath = $this->getFilePath($path, $file);
     }
 
+    /**
+     * load env variable do not override exists env variable
+     *
+     * @return array
+     */
     public function load()
     {
+        $loader = new Loader($this->filePath, true);
+        return $loader->load();
+    }
+
+    /**
+     * load env variable override exists env variable
+     *
+     * @return array
+     */
+    public function overLoad()
+    {
+        $loader = new Loader($this->filePath, false);
+        return $loader->load();
     }
 
     /**
