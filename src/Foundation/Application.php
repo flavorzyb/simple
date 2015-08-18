@@ -299,6 +299,11 @@ class Application
         return str_ireplace('//', '/', $uri);
     }
 
+    /**
+     * chop index.php from uri
+     * @param string $uri
+     * @return string
+     */
     protected function chopIndex($uri)
     {
         $subStr = strtolower(substr($uri,0, 10));
@@ -375,6 +380,9 @@ class Application
         }
     }
 
+    /**
+     * file not found
+     */
     public function fileNotFound()
     {
         if ("cli" != PHP_SAPI) {
