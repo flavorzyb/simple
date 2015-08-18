@@ -73,6 +73,9 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
         $_SERVER['REQUEST_URI'] = '/aaa/bbb/11/23/44?id=87&code=89';
         $_SERVER['QUERY_STRING'] = 'id=87&code=89';
+
+        $this->app->setSubModule("Admin");
+        $this->assertEquals("Admin", $this->app->getSubModule());
         $this->app->run();
     }
 
@@ -80,5 +83,20 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         $this->app->setConfigPath(__DIR__ . '/../config/app.php');
         $this->app->bootStrap();
+    }
+
+    public function testNamespaceIsMutable()
+    {
+        $this->app->setAppNameSpace("WeMall");
+        $this->assertEquals("WeMall", $this->app->getAppNameSpace());
+    }
+
+    public function testDefaultControllerAndMethod()
+    {
+        $this->app->setDefaultController("Index");
+        $this->assertEquals("Index", $this->app->getDefaultController());
+
+        $this->app->setDefaultMethod("index");
+        $this->assertEquals("index", $this->app->getDefaultMethod());
     }
 }
