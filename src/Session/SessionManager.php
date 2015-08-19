@@ -186,5 +186,6 @@ class SessionManager
     {
         session_set_save_handler($this->getDriver(), false);
         $this->setOptions($this->config->all());
+        session_start();
     }
 }
