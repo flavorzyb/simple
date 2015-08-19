@@ -474,7 +474,7 @@ class Db
      * $db->exec() or die(print_r($db->errorInfo(), true));
      * </code>
      */
-    public function execute($query)
+    public function exec($query)
     {
         return $this->getActivePdo()->exec($query);
     }
