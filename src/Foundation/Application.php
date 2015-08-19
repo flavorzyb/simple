@@ -222,9 +222,30 @@ class Application
      */
     public function bootStrap()
     {
-        $this->initConfig();
+        error_reporting(-1);
+        set_error_handler([$this, 'handleError']);
 
+        $this->initConfig();
         $this->initEnvironment();
+    }
+    /**
+     * Convert a PHP error to an ErrorException.
+     *
+     * @param  int  $level
+     * @param  string  $message
+     * @param  string  $file
+     * @param  int  $line
+     * @param  array  $context
+     * @return void
+     *
+     * @throws \ErrorException
+     */
+    public function handleError($level, $message, $file = '', $line = 0, $context = array())
+    {
+        if (error_reporting() & $level)
+        {
+            throw new \ErrorException($message, 0, $level, $file, $line);
+        }
     }
 
     /**
