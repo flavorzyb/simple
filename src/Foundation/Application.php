@@ -222,11 +222,18 @@ class Application
      */
     public function bootStrap()
     {
-        error_reporting(-1);
-        set_error_handler([$this, 'handleError']);
-
         $this->initConfig();
         $this->initEnvironment();
+
+        if ('testing'==env('APP_ENV')) {
+            error_reporting(-1);
+            ini_set('display_errors', 'On');
+        } else {
+            error_reporting(E_ALL);
+            ini_set('display_errors', 'Off');
+        }
+
+        set_error_handler([$this, 'handleError']);
     }
     /**
      * Convert a PHP error to an ErrorException.
