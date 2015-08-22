@@ -594,7 +594,7 @@ class Client
             }
 
             //设置header
-            curl_setopt($ch, CURLOPT_HEADER,         true);
+            curl_setopt($ch, CURLOPT_HEADER,         $this->header);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
             $result = curl_exec($ch);
@@ -604,9 +604,13 @@ class Client
             $this->responseCode     = 0;
             if (!curl_errno($ch)) {
                 $this->responseCode     = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                $headerSize             = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-                $this->responseHeader   = substr($result, 0, $headerSize);
-                $this->response         =  substr($result, $headerSize);
+                if ($this->header) {
+                    $headerSize             = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+                    $this->responseHeader   = substr($result, 0, $headerSize);
+                    $this->response         = substr($result, $headerSize);
+                } else {
+                    $this->response         = $result;
+                }
             }
 
             curl_close($ch);

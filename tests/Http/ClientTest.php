@@ -63,7 +63,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testGetAndReturnString()
     {
         $this->client->setUrl('http://127.0.0.1/test.php');
+        $this->client->setHeader(true);
         $this->assertTrue($this->client->exec());
         $this->assertTrue(strlen($this->client->getResponse()) > 0);
+//        var_dump($this->client->getResponseCode(), $this->client->getResponseHeader(), $this->client->getResponse());
     }
 }
