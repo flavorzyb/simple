@@ -41,6 +41,15 @@ class Client
     const CERT_TYPE_DER = "DER";
 
     const CERT_TYPE_ENG = "ENG";
+
+    /**
+     * default proxy host
+     */
+    const PROXY_HOST_DEFAULT   = '0.0.0.0';
+    /**
+     * default proxy port
+     */
+    const PROXY_PORT_DEFAULT   = 0;
     /**
      * @var string
      */
@@ -139,6 +148,42 @@ class Client
      * @var string
      */
     protected $userAgent        = "";
+
+    /**
+     * set header data
+     * @var array
+     */
+    protected $headerArray           = [];
+
+    /**
+     * refer string
+     * @var string
+     */
+    protected $referer          = "";
+
+    /**
+     * proxy port
+     * @var int
+     */
+    protected $proxyPort        = self::PROXY_PORT_DEFAULT;
+    /**
+     * proxy host
+     * @var string
+     */
+    protected $proxyHost        = self::PROXY_HOST_DEFAULT;
+
+    /**
+     * output header or not
+     * @var bool
+     */
+    protected $header           = false;
+
+    /**
+     * response header string
+     * @var string
+     */
+    protected $responseHeader   = "";
+
     /**
      * @return string
      */
@@ -395,6 +440,24 @@ class Client
     }
 
     /**
+     * get referer
+     * @return string
+     */
+    public function getReferer()
+    {
+        return $this->referer;
+    }
+
+    /**
+     * set referer
+     * @param string $referer
+     */
+    public function setReferer($referer)
+    {
+        $this->referer = $referer;
+    }
+
+    /**
      * use cert
      * @param string $certType
      * @param string $certPath
@@ -417,6 +480,48 @@ class Client
                 $this->useCert = false;
                 break;
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getHeaderArray()
+    {
+        return $this->headerArray;
+    }
+
+    /**
+     * @param array $headerArray
+     */
+    public function setHeaderArray(array $headerArray)
+    {
+        $this->headerArray = $headerArray;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isHeader()
+    {
+        return $this->header;
+    }
+
+    /**
+     * set header or not
+     * @param boolean $header
+     */
+    public function setHeader($header)
+    {
+        $this->header = boolval($header);
+    }
+
+    /**
+     * get response header string
+     * @return string
+     */
+    public function getResponseHeader()
+    {
+        return $this->responseHeader;
     }
 
     /**
@@ -465,6 +570,22 @@ class Client
                 curl_setopt($ch, CURLOPT_SSLKEY,        $this->sslKey);
             }
 
+            // referer
+            if ("" != $this->referer) {
+                curl_setopt($ch, CURLOPT_REFERER, $this->referer);
+            }
+
+            // header array
+            if (!empty($this->headerArray)) {
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headerArray);
+            }
+
+            // proxy
+            if ((self::PROXY_HOST_DEFAULT != $this->proxyHost) && (self::PROXY_PORT_DEFAULT != $this->proxyPort)) {
+                curl_setopt($ch, CURLOPT_PROXY,     $this->proxyHost);
+                curl_setopt($ch, CURLOPT_PROXYPORT, $this->proxyPort);
+            }
+
             //method and data
             curl_setopt($ch, $methodArray['method'], $methodArray['value']);
 
@@ -472,12 +593,20 @@ class Client
                 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($this->postDataArray));
             }
 
+            //设置header
+            curl_setopt($ch, CURLOPT_HEADER,         true);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
             $result = curl_exec($ch);
 
+            $this->responseHeader   = '';
+            $this->response         = '';
+            $this->responseCode     = 0;
             if (!curl_errno($ch)) {
-                $this->responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                $this->responseCode     = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                $headerSize             = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+                $this->responseHeader   = substr($result, 0, $headerSize);
+                $this->response         =  substr($result, $headerSize);
             }
 
             curl_close($ch);
@@ -492,7 +621,6 @@ class Client
             }
         }
 
-        $this->response     =  $result;
         return (false !== $result);
     }
 }

@@ -65,10 +65,5 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->client->setUrl('http://127.0.0.1/test.php');
         $this->assertTrue($this->client->exec());
         $this->assertTrue(strlen($this->client->getResponse()) > 0);
-
-    }
-
-    public function testPostAndReturnString()
-    {
     }
 }
