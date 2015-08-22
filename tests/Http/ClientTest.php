@@ -49,13 +49,23 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->client->setTimeout('-12');
         $this->assertEquals(0, $this->client->getTimeout());
 
-        $this->assertEquals('', $this->client->getUri());
-        $this->client->setUri('http://www.163.com');
-        $this->assertEquals('http://www.163.com', $this->client->getUri());
+        $this->assertEquals('', $this->client->getUrl());
+        $this->client->setUrl('http://www.163.com');
+        $this->assertEquals('http://www.163.com', $this->client->getUrl());
+
+        $this->assertEquals(Client::RETRY_COUNT, $this->client->getRetryCount());
+        $this->client->setRetryCount(10);
+        $this->assertEquals(10, $this->client->getRetryCount());
+        $this->client->setRetryCount(-10);
+        $this->assertEquals(0, $this->client->getRetryCount());
     }
 
     public function testGetAndReturnString()
     {
+        $this->client->setUrl('http://127.0.0.1/test.php');
+        $this->assertTrue($this->client->exec());
+        $this->assertTrue(strlen($this->client->getResponse()) > 0);
+
     }
 
     public function testPostAndReturnString()
