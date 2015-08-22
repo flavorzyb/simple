@@ -64,6 +64,13 @@ class Client
      * @var array
      */
     protected $postDataArray = [];
+
+    /**
+     * post fields
+     *
+     * @var string
+     */
+    protected $postFields   = '';
     /**
      * @var int
      */
@@ -347,6 +354,27 @@ class Client
     }
 
     /**
+     * get post fields
+     *
+     * @return string
+     */
+    public function getPostFields()
+    {
+        return $this->postFields;
+    }
+
+    /**
+     * set post fields
+     *
+     * @param string $postFields
+     */
+    public function setPostFields($postFields)
+    {
+        $this->postFields = $postFields;
+    }
+
+
+    /**
      * get response code
      * @return int
      */
@@ -589,8 +617,12 @@ class Client
             //method and data
             curl_setopt($ch, $methodArray['method'], $methodArray['value']);
 
-            if ((CURLOPT_POST == $methodArray['method']) && (!empty($this->postDataArray))) {
-                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($this->postDataArray));
+            if (CURLOPT_POST == $methodArray['method']) {
+                if (!empty($this->postDataArray)) {
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($this->postDataArray));
+                } elseif ('' != $this->postFields) {
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $this->postFields);
+                }
             }
 
             //设置header
