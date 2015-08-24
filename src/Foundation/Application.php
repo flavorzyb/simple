@@ -187,10 +187,19 @@ class Application
         date_default_timezone_set($this->config['timezone']);
         mb_internal_encoding('UTF-8');
 
-        if (is_file($this->getEnvFile())) {
+        if (is_file($this->getFullEnvFilePath())) {
             $env = new DotEnv($this->basePath, $this->getEnvFile(), true);
             $env->load();
         }
+    }
+
+    /**
+     * get full file path of env
+     * @return string
+     */
+    protected function getFullEnvFilePath()
+    {
+        return $this->basePath . DIRECTORY_SEPARATOR . $this->getEnvFile();
     }
 
     /**
@@ -198,8 +207,7 @@ class Application
      */
     protected function loadEnvironment()
     {
-        $file = $this->basePath . DIRECTORY_SEPARATOR . $this->getEnvFile();
-        if (is_file($file)) {
+        if (is_file($this->getFullEnvFilePath())) {
             $env = new DotEnv($this->basePath, $this->getEnvFile(), true);
             $env->load();
         }
@@ -209,8 +217,7 @@ class Application
      */
     protected function overloadEnvironment()
     {
-        $file = $this->basePath . DIRECTORY_SEPARATOR . $this->getEnvFile();
-        if (is_file($file)) {
+        if (is_file($this->getFullEnvFilePath())) {
             $env = new DotEnv($this->basePath, $this->getEnvFile(), false);
             $env->load();
         }
