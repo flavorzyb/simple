@@ -100,7 +100,7 @@ class SessionManager
     {
         $serverArray    = $this->config['servers'];
         $persistent     = boolval($this->config['persistent']);
-        $name           = trim($this->config['name']);
+        $name           = trim($this->config['server_name']);
         $prefix         = trim($this->config['prefix']);
         $expireTime     = intval($this->config['lifetime']);
 

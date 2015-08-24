@@ -53,7 +53,7 @@ class SessionManagerTest extends \PHPUnit_Framework_TestCase
         $config['persistent']   = true;
         $config['prefix']       = "session_";
         $config['expireTime']   = 1200;
-        $config['name']         = "session_memcached_server";
+        $config['server_name']  = "session_memcached_server";
         $config['servers']   = [['host'=>'127.0.0.1', 'port'=>11211],['host'=>'127.0.0.1', 'port'=>11211]];
 
         $manager = new SessionManager(new Repository($config));
@@ -88,7 +88,7 @@ class SessionManagerTest extends \PHPUnit_Framework_TestCase
         $config['persistent']   = true;
         $config['prefix']       = "session_";
         $config['expireTime']   = 1200;
-        $config['name']         = "session_redis_server";
+        $config['server_name']         = "session_redis_server";
         $config['servers']   = [['host'=>'127.0.0.1', 'port'=>6379],['host'=>'127.0.0.1', 'port'=>6379]];
 
 
@@ -106,8 +106,8 @@ class SessionManagerTest extends \PHPUnit_Framework_TestCase
         $config['persistent']   = true;
         $config['prefix']       = "session_";
         $config['expireTime']   = 1200;
-        $config['name']         = "session_redis_server";
-        $config['servers']   = [['host'=>'127.0.0.1', 'port'=>6379],['host'=>'127.0.0.1', 'port'=>6379]];
+        $config['server_name']  = "session_redis_server";
+        $config['servers']      = [['host'=>'127.0.0.1', 'port'=>6379],['host'=>'127.0.0.1', 'port'=>6379]];
 
 
         $manager = new SessionManager(new Repository($config));
