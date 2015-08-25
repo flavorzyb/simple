@@ -271,17 +271,14 @@ class Application
 
     /**
      * Handle the PHP shutdown event.
-     *
-     * @throws \ErrorException
      */
     public function handleShutdown()
     {
         if ( ! is_null($error = error_get_last()) && $this->isFatal($error['type']))
         {
-            $ex = new \ErrorException($error['message'], $error['type'], 0, $error['file'], $error['line']);
-
-            if ($this->getLog() instanceof Writer) {
-                $this->getLog()->error($ex->getTraceAsString());
+            $log = $this->getLog();
+            if ($log instanceof Writer) {
+                $log->error($error['message'] . " in " . $error['file'] . " on line " . $error['line']);
             }
         }
     }
