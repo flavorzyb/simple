@@ -16,12 +16,13 @@ class Client
      */
     const METHOD_GET    = 'GET';
     const METHOD_POST   = 'POST';
+    const METHOD_UPLOAD = 'UPLOAD';
 
     /**
      * http version
      */
-    const HTTP_VERSION_10    = '1.0';
-    const HTTP_VERSION_11    = '1.1';
+    const HTTP_VERSION_10    = CURL_HTTP_VERSION_1_0;
+    const HTTP_VERSION_11    = CURL_HTTP_VERSION_1_1;
 
     /**
      * default time out
@@ -208,6 +209,7 @@ class Client
         {
             case self::METHOD_GET:
             case self::METHOD_POST:
+            case self::METHOD_UPLOAD:
                 $this->method = $method;
                 break;
             default:
@@ -330,6 +332,9 @@ class Client
         $result = ['method' => CURLOPT_HTTPGET, 'value' => true];
         if (self::METHOD_POST == $method) {
             $result['method'] = CURLOPT_POST;
+        }elseif (self::METHOD_UPLOAD == $method) {
+            $result['method'] = CURLOPT_UPLOAD;
+//            $result['method'] = CURLOPT_POST;
         }
 
         return $result;
@@ -615,7 +620,9 @@ class Client
             }
 
             //method and data
-            curl_setopt($ch, $methodArray['method'], $methodArray['value']);
+            if (CURLOPT_UPLOAD != $methodArray['method']) {
+                curl_setopt($ch, $methodArray['method'], $methodArray['value']);
+            }
 
             if (CURLOPT_POST == $methodArray['method']) {
                 if (!empty($this->postDataArray)) {
@@ -623,6 +630,9 @@ class Client
                 } elseif ('' != $this->postFields) {
                     curl_setopt($ch, CURLOPT_POSTFIELDS, $this->postFields);
                 }
+            } elseif (CURLOPT_UPLOAD == $methodArray['method']) {
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $this->postDataArray);
             }
 
             //设置header

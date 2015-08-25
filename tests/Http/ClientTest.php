@@ -66,6 +66,21 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->client->setHeader(true);
         $this->assertTrue($this->client->exec());
         $this->assertTrue(strlen($this->client->getResponse()) > 0);
-//        var_dump($this->client->getResponseCode(), $this->client->getResponseHeader(), $this->client->getResponse());
+    }
+
+    public function testDownLoadImage()
+    {
+//        $this->client->setUrl('https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQG58DoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xLzdqczBZV2JtbXIzajRfWUtNQlhEAAIE51jcVQMEgDoJAA==');
+//        $this->client->setHeader(true);
+//        $this->assertTrue($this->client->exec());
+    }
+
+    public function testUploadImage()
+    {
+        $this->client->setUrl('http://127.0.0.1/test/upload_test.php');
+        $this->client->setMethod(Client::METHOD_UPLOAD);
+        $this->client->setPostDataArray(['file' => curl_file_create(__FILE__)]);
+        var_dump($this->client->exec());
+        var_dump($this->client->getResponse());
     }
 }
