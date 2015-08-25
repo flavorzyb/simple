@@ -11,6 +11,7 @@ namespace Simple\Foundation;
 
 use Simple\Config\Repository;
 use Simple\Environment\DotEnv;
+use Simple\Log\Writer;
 
 class Application
 {
@@ -70,6 +71,10 @@ class Application
      */
     protected $envFile              = "";
 
+    /**
+     * @var null
+     */
+    protected $log                  = null;
     /**
      * Application constructor.
      * @param string $basePath
@@ -273,7 +278,11 @@ class Application
     {
         if ( ! is_null($error = error_get_last()) && $this->isFatal($error['type']))
         {
-            throw new ErrorException($error['message'], $error['type'], 0, $error['file'], $error['line']);
+            $ex = new \Exception($error['message'], $error['type'], 0, $error['file'], $error['line']);
+
+            if ($this->getLog() instanceof Writer) {
+                $this->getLog()->error($ex->getTraceAsString());
+            }
         }
     }
 
@@ -479,5 +488,21 @@ class Application
     public function version()
     {
         return self::VERSION;
+    }
+
+    /**
+     * @return Writer
+     */
+    public function getLog()
+    {
+        return $this->log;
+    }
+
+    /**
+     * @param Writer $log
+     */
+    public function setLog(Writer $log)
+    {
+        $this->log = $log;
     }
 }
