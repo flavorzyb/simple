@@ -278,7 +278,7 @@ class Application
     {
         if ( ! is_null($error = error_get_last()) && $this->isFatal($error['type']))
         {
-            $ex = new \Exception($error['message'], $error['type'], 0, $error['file'], $error['line']);
+            $ex = new \ErrorException($error['message'], $error['type'], 0, $error['file'], $error['line']);
 
             if ($this->getLog() instanceof Writer) {
                 $this->getLog()->error($ex->getTraceAsString());
