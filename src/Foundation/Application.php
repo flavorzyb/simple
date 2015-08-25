@@ -241,6 +241,8 @@ class Application
         }
 
         set_error_handler([$this, 'handleError']);
+
+        register_shutdown_function([$this, 'handleShutdown']);
     }
     /**
      * Convert a PHP error to an ErrorException.
@@ -260,6 +262,30 @@ class Application
         {
             throw new \ErrorException($message, 0, $level, $file, $line);
         }
+    }
+
+    /**
+     * Handle the PHP shutdown event.
+     *
+     * @throws \ErrorException
+     */
+    public function handleShutdown()
+    {
+        if ( ! is_null($error = error_get_last()) && $this->isFatal($error['type']))
+        {
+            throw new ErrorException($error['message'], $error['type'], 0, $error['file'], $error['line']);
+        }
+    }
+
+    /**
+     * Determine if the error type is fatal.
+     *
+     * @param  int  $type
+     * @return bool
+     */
+    protected function isFatal($type)
+    {
+        return in_array($type, [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE]);
     }
 
     /**
