@@ -13,13 +13,24 @@ use Simple\Filesystem\Filesystem;
 
 class FileStoreTest extends StoreTest
 {
+    /**
+     * @var Filesystem
+     */
+    protected $fileSystem = null;
+
     protected function setUp()
     {
-        $fileSystem = new Filesystem();
-        $this->setStore(new FileStore($fileSystem, TESTING_TMP_PATH,  $this->prefix));
-        if (!$fileSystem->isDirectory(TESTING_TMP_PATH)) {
-            $fileSystem->makeDirectory(TESTING_TMP_PATH);
+        $this->fileSystem = new Filesystem();
+        $this->setStore(new FileStore($this->fileSystem, TESTING_TMP_PATH,  $this->prefix));
+        if (!$this->fileSystem->isDirectory(TESTING_TMP_PATH)) {
+            $this->fileSystem->makeDirectory(TESTING_TMP_PATH);
         }
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->fileSystem->deleteDirectory(TESTING_TMP_PATH);
     }
 
     /**
