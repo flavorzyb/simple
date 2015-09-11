@@ -123,13 +123,13 @@ class RedisServer
         }
 
         if (isset($this->clientArray[$name])) {
-            if ('cli' == PHP_SAPI) {
+//            if ('cli' == PHP_SAPI) {
                 try {
                     $this->clientArray[$name]->ping();
                 } catch (\RedisException $ex) {
                     $this->clientArray[$name] = $this->createClient($this->serverArray[$name]);
                 }
-            }
+//            }
             return $this->clientArray[$name];
         }
 
