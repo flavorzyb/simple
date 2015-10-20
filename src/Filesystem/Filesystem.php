@@ -366,4 +366,18 @@ class Filesystem
     {
         return $this->deleteDirectory($directory, true);
     }
+
+    /**
+     * md5 file
+     *
+     * @param string $path
+     * @return bool|string
+     */
+    public function md5File($path) {
+        if (is_file($path)) {
+            return md5_file($path);
+        }
+
+        return false;
+    }
 }

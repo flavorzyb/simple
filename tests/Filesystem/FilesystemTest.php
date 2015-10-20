@@ -260,4 +260,12 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(4, sizeof($file->files($dir, true)));
         $file->deleteDirectory($dir);
     }
+
+    public function testMd5FilePath() {
+        $file = new Filesystem();
+        $this->assertFalse($file->md5File($this->basePath . '/foo.txt'));
+
+        file_put_contents($this->basePath . '/foo.txt', 'foo');
+        $this->assertTrue(strlen($file->md5File($this->basePath . '/foo.txt')) > 0);
+    }
 }
