@@ -314,6 +314,15 @@ class Db
     }
 
     /**
+     * disconnect all connections
+     */
+    public function disconnectAll() {
+        foreach ($this->connections as $k => $data) {
+            $this->disconnect($k);
+        }
+    }
+
+    /**
      * Run a select statement and return a single result.
      *
      * @param string $query
