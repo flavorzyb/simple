@@ -59,7 +59,7 @@ class SessionManagerTest extends \PHPUnit_Framework_TestCase
         $manager = new SessionManager(new Repository($config));
 
         $this->assertTrue($manager->getDriver() instanceof CacheSessionHandler);
-        $manager->init();
+//        $manager->init();
         $this->assertInstanceOf('Simple\Cache\MemcachedStore', $manager->getDriver()->getCache());
 
         // test persistent
@@ -96,7 +96,7 @@ class SessionManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('\SessionHandlerInterface', $manager->getDriver());
         $this->assertInstanceOf('Simple\Cache\RedisStore', $manager->getDriver()->getCache());
-        $manager->init();
+//        $manager->init();
     }
 
     public function testUnSupportDriver()

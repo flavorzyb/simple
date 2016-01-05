@@ -11,4 +11,7 @@ namespace Environment;
 
 class DotEnvTest extends \PHPUnit_Framework_TestCase
 {
+    public function testOptions() {
+
+    }
 }

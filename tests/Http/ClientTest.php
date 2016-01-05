@@ -80,7 +80,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->client->setUrl('http://127.0.0.1/test/upload_test.php');
         $this->client->setMethod(Client::METHOD_UPLOAD);
         $this->client->setPostDataArray(['file' => curl_file_create(__FILE__)]);
-        var_dump($this->client->exec());
-        var_dump($this->client->getResponse());
+        $this->assertTrue($this->client->exec());
     }
 }
