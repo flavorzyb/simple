@@ -29,7 +29,9 @@ class LangTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($basePath, $lang->getPath());
 
         $this->assertEquals("", $lang->get("error.no_exists_key"));
-        $this->assertEquals("", $lang->get("error"));
+        $this->assertEquals("", $lang->get(""));
+        $data = $lang->get("error");
+        $this->assertTrue(sizeof($data) > 0);
 
         $this->assertEquals("错误的用户名", $lang->get("error.error_user_name"));
         $this->assertEquals("错误的uid", $lang->get("error.error_uid"));

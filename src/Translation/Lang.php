@@ -106,15 +106,20 @@ class Lang
         $group = $segments[0];
         $item = $segments[1];
 
-        if (null == $item) {
+        if ("" == $group) {
             return "";
         }
 
         $localeArray = $this->parseLocale($locale);
         foreach ($localeArray as $locale) {
             $this->load($group, $locale);
-            if (isset($this->loaded[$group][$locale][$item])) {
-                return $this->loaded[$group][$locale][$item];
+
+            if (isset($this->loaded[$group][$locale])) {
+                if (null == $item) {
+                    return $this->loaded[$group][$locale];
+                } elseif (isset($this->loaded[$group][$locale][$item])) {
+                    return $this->loaded[$group][$locale][$item];
+                }
             }
         }
 
