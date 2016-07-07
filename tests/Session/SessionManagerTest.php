@@ -40,8 +40,19 @@ class SessionManagerTest extends \PHPUnit_Framework_TestCase
 
         $fileSystem->deleteDirectory($config['files']);
 
+    }
+
+    /**
+     * @throws SessionException
+     * @expectedException \Simple\Session\SessionException
+     */
+    public function testFileDriverThrowsException()
+    {
+        $config             = $this->config->all();
+        $config['driver']   = 'file';
+        $config['files']   = TESTING_TMP_PATH;
+
         // test when session directory is not exists
-        $this->setExpectedException('Simple\Session\SessionException');
         $manager = new SessionManager(new Repository($config));
         $manager->getDriver();
     }
@@ -72,14 +83,26 @@ class SessionManagerTest extends \PHPUnit_Framework_TestCase
         $manager = new SessionManager(new Repository($config));
         $this->assertTrue($manager->getDriver() instanceof CacheSessionHandler);
         $this->assertInstanceOf('Simple\Cache\MemcachedStore', $manager->getDriver()->getCache());
-
-        // test for exception
-        unset($config['servers']);
-        $manager = new SessionManager(new Repository($config));
-        $this->setExpectedException('Simple\Session\SessionException');
-        $this->assertTrue($manager->getDriver() instanceof CacheSessionHandler);
-        $this->assertInstanceOf('Simple\Cache\MemcachedStore', $manager->getDriver()->getCache());
     }
+
+//    /**
+//     * @expectedException Simple\Session\SessionException
+//     */
+//    public function testMemcachedDriverThrowsException()
+//    {
+//        $config                 = $this->config->all();
+//        $config['driver']       = 'memcached';
+//        $config['persistent']   = true;
+//        $config['prefix']       = "session_";
+//        $config['expireTime']   = 1200;
+//        $config['server_name']  = "session_memcached_server";
+//        $config['servers']   = [['host'=>'127.0.0.1', 'port'=>11211],['host'=>'127.0.0.1', 'port'=>11211]];
+//        // test for exception
+//        unset($config['servers']);
+//        $manager = new SessionManager(new Repository($config));
+//        $this->assertTrue($manager->getDriver() instanceof CacheSessionHandler);
+//        $this->assertInstanceOf('Simple\Cache\MemcachedStore', $manager->getDriver()->getCache());
+//    }
 
     public function testRedisDriver()
     {
@@ -99,6 +122,10 @@ class SessionManagerTest extends \PHPUnit_Framework_TestCase
 //        $manager->init();
     }
 
+    /**
+     * @throws SessionException
+     * @expectedException \Simple\Session\SessionException
+     */
     public function testUnSupportDriver()
     {
         $config                 = $this->config->all();
@@ -111,7 +138,6 @@ class SessionManagerTest extends \PHPUnit_Framework_TestCase
 
 
         $manager = new SessionManager(new Repository($config));
-        $this->setExpectedException('Simple\Session\SessionException');
         $this->assertInstanceOf('\SessionHandlerInterface', $manager->getDriver());
     }
 }
