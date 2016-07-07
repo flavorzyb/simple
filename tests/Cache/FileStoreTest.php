@@ -8,7 +8,7 @@
 
 namespace Simple\Cache;
 
-
+use Mockery as m;
 use Simple\Filesystem\Filesystem;
 
 class FileStoreTest extends StoreTest
@@ -34,10 +34,33 @@ class FileStoreTest extends StoreTest
     }
 
     /**
-     * @return MemcachedStore
+     * @return FileStore
      */
     protected function getStore()
     {
         return $this->store;
+    }
+
+    public function testGetFileSystem()
+    {
+        $this->assertTrue($this->getStore()->getFileSystem() instanceof Filesystem);
+    }
+
+    public function testGetDirectory()
+    {
+        $this->assertEquals(TESTING_TMP_PATH, $this->getStore()->getDirectory());
+    }
+
+    public function testGetDataWithMock()
+    {
+        $fileSystem = m::mock('Simple\Filesystem\Filesystem');
+        $fileSystem->shouldReceive('get')->andReturn('1000000000i:2222');
+        $fileSystem->shouldReceive('isFile')->andReturn(true);
+        $fileSystem->shouldReceive('exists')->andReturn(true);
+        $fileSystem->shouldReceive('isDirectory')->andReturn(false);
+        $fileSystem->shouldReceive('delete')->andReturn(true);
+        $this->setStore(new FileStore($fileSystem, TESTING_TMP_PATH,  $this->prefix));
+
+        $this->assertNull($this->getStore()->get("abc"));
     }
 }

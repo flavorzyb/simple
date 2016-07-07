@@ -192,10 +192,10 @@ class FileStore implements Store
 
         if ($this->fileSystem->exists($file))
         {
-            return $this->fileSystem->delete($file);
+            $this->fileSystem->delete($file);
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -242,14 +242,7 @@ class FileStore implements Store
      */
     protected function createCacheDirectory($path)
     {
-        try
-        {
-            $this->fileSystem->makeDirectory(dirname($path), 0777, true, true);
-        }
-        catch (\Exception $e)
-        {
-            //
-        }
+        $this->fileSystem->makeDirectory(dirname($path), 0777, true, true);
     }
 
     /**

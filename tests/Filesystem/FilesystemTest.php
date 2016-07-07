@@ -77,11 +77,11 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException \Simple\Filesystem\FileNotFoundException
      */
     public function testGetThrowsExceptionNonexisitingFile()
     {
         $files = new Filesystem;
-        $this->setExpectedException('Simple\Filesystem\FileNotFoundException');
         $files->get($this->basePath . '/unknown-file.txt');
     }
 
