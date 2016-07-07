@@ -89,20 +89,27 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $pdo->exec($sql);
     }
 
+    /**
+     * @expectedException \Simple\Database\DbException
+     */
     public function testUnSetDefaultThrowException()
     {
         $this->config->offsetUnset('default');
-        $this->setExpectedException('Simple\Database\DbException');
         $this->db   = new Db($this->config);
     }
 
+    /**
+     * @expectedException \Simple\Database\DbException
+     */
     public function testDefaultNameErrorThrowException()
     {
         $this->config['default']    = 'error_pdo_name';
-        $this->setExpectedException('Simple\Database\DbException');
         $this->db   = new Db($this->config);
     }
 
+    /**
+     * @expectedException \Simple\Database\DbException
+     */
     public function testHostErrorThrowException()
     {
         $config = $this->config->all();
@@ -111,11 +118,13 @@ class DbTest extends \PHPUnit_Framework_TestCase
         unset($config['connections']['read']['host']);
 
         $this->config   = new Repository($config);
-        $this->setExpectedException('Simple\Database\DbException');
         $this->db   = new Db($this->config);
         $this->db->getDefaultPdo();
     }
 
+    /**
+     * @expectedException \Simple\Database\DbException
+     */
     public function testDatabaseErrorThrowException()
     {
         $config = $this->config->all();
@@ -124,22 +133,25 @@ class DbTest extends \PHPUnit_Framework_TestCase
         unset($config['connections']['read']['database']);
 
         $this->config   = new Repository($config);
-        $this->setExpectedException('Simple\Database\DbException');
         $this->db   = new Db($this->config);
         $this->db->getDefaultPdo();
     }
 
+    /**
+     * @expectedException \Simple\Database\DbException
+     */
     public function testUnSetConnectionsThrowException()
     {
         $this->config->offsetUnset('connections');
-        $this->setExpectedException('Simple\Database\DbException');
         $this->db   = new Db($this->config);
     }
 
+    /**
+     * @expectedException \Simple\Database\DbException
+     */
     public function testErrorDriverThrowException()
     {
         $this->config['driver'] = 'sqlite';
-        $this->setExpectedException('Simple\Database\DbException');
         $this->db   = new Db($this->config);
     }
 
@@ -186,6 +198,16 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $this->db->usePdo('write');
         $this->assertInstanceOf('\PDO', $this->db->getActivePdo());
         $this->db->disconnect('write');
+        $this->assertNull($this->db->getActivePdo());
+    }
+
+    public function testDisconnectAll()
+    {
+        $this->db->getPdo('read');
+        $this->db->getPdo('write');
+        $this->db->usePdo('read');
+        $this->assertFalse(null == $this->db->getActivePdo());
+        $this->db->disconnectAll();
         $this->assertNull($this->db->getActivePdo());
     }
 
@@ -242,6 +264,9 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(22, $result[0]['age']);
     }
 
+    /**
+     * @expectedException \Simple\Database\DbException
+     */
     public function testSelectThrowException()
     {
         $this->initTable();
@@ -249,7 +274,6 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $sql = "SELECT * FROM `test` WHERE `name` = ':name'";
 
         // throw exception
-        $this->setExpectedException('Simple\Database\DbException');
         $this->db->selectOne($sql, array('name' => 'test_test_error'));
     }
 
@@ -291,6 +315,19 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $this->db->usePdo('write');
         $sql        = "DELETE FROM `test` WHERE `id` = :id";
         $rowCount   = $this->db->delete($sql, ['id' => 1]);
+        $this->assertEquals(1, $rowCount);
+
+        $sql = "SELECT * FROM `test` WHERE `id` = ?";
+        $result = $this->db->select($sql, array(1));
+        $this->assertEquals(0, sizeof($result));
+    }
+
+    public function testExec()
+    {
+        $this->initTable();
+        $this->db->usePdo('write');
+        $sql        = "DELETE FROM `test` WHERE `id` = 1";
+        $rowCount   = $this->db->exec($sql);
         $this->assertEquals(1, $rowCount);
 
         $sql = "SELECT * FROM `test` WHERE `id` = ?";
