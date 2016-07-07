@@ -9,7 +9,6 @@
 namespace Simple\Cache;
 
 use Memcached;
-use Exception;
 
 use Simple\Redis\RedisServer;
 use Simple\Config\Repository;
@@ -47,23 +46,17 @@ class CacheManager
         $name           = trim($this->config['server_name']);
         $prefix         = trim($this->config['prefix']);
 
-        try {
-            if ($persistent && (strlen($name) > 0)) {
-                $memcached  = new Memcached($name);
-            } else {
-                $memcached  = new Memcached();
-            }
-
-            if (!sizeof($memcached->getServerList())) {
-                $memcached->addServers($serverArray);
-            }
-
-            return new MemcachedStore($memcached, $prefix);
-        } catch (Exception $ex) {
-            throw new CacheException($ex->getMessage(), $ex->getCode());
+        if ($persistent && (strlen($name) > 0)) {
+            $memcached  = new Memcached($name);
+        } else {
+            $memcached  = new Memcached();
         }
 
-        return null;
+        if (!sizeof($memcached->getServerList())) {
+            $memcached->addServers($serverArray);
+        }
+
+        return new MemcachedStore($memcached, $prefix);
     }
 
     /**

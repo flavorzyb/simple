@@ -45,4 +45,33 @@ class CacheManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($cacheManager->getStore()->set('key', 'value', 100));
         $this->assertEquals('value', $cacheManager->getStore()->get('key'));
     }
+
+    public function testMemcachedStoreWithNoName()
+    {
+        $config = [ 'driver'        =>'memcached',
+            'persistent'    =>true,
+            'servers'       => [['host'=>'127.0.0.1', 'port'=>11211],['host'=>'127.0.0.1', 'port'=>11211]],
+            'prefix'        => 'mc',
+        ];
+
+        $config = new Repository($config);
+        $cacheManager = new CacheManager($config);
+        $this->assertInstanceOf('\Simple\Cache\MemcachedStore', $cacheManager->getStore());
+        $this->assertTrue($cacheManager->getStore()->set('key', 'value', 100));
+        $this->assertEquals('value', $cacheManager->getStore()->get('key'));
+    }
+
+    /**
+     * @expectedException \Simple\Cache\CacheException
+     */
+    public function testErrorStore()
+    {
+        $config = [ 'driver'        =>'errorStore',
+            'persistent'    =>true,
+        ];
+
+        $config = new Repository($config);
+        $cacheManager = new CacheManager($config);
+        $this->assertInstanceOf('\Simple\Cache\RedisStore', $cacheManager->getStore());
+    }
 }
