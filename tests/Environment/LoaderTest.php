@@ -24,11 +24,13 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testLoadWithImmutable()
     {
+        $_SERVER['DB_HOST_TEST'] = '127.0.0.1';
         $loader = new Loader($this->path . DIRECTORY_SEPARATOR . $this->file, false);
         $loader->load();
         $this->assertEquals("local", $_ENV['APP_ENV']);
         $this->assertEquals('true',    $_ENV['APP_DEBUG']);
         $this->validEnv();
+        $this->assertEquals("127.0.0.1", $loader->getEnvironmentVariable('DB_HOST_TEST'));
     }
 
     public function testLoadWithNoImmutable()
@@ -38,6 +40,15 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("testing", $_ENV['APP_ENV']);
         $this->assertEquals('false', $_ENV['APP_DEBUG']);
         $this->validEnv();
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testLoadWithException()
+    {
+        $loader = new Loader("error_file.env", true);
+        $loader->load();
     }
 
     protected function validEnv()
