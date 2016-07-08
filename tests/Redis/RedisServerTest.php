@@ -8,6 +8,8 @@
 
 namespace Simple\Redis;
 
+use Mockery as m;
+use Simple\Config\Repository;
 
 class RedisServerTest extends \PHPUnit_Framework_TestCase
 {
@@ -73,42 +75,78 @@ class RedisServerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Redis', $redisServer->getDefaultClient());
     }
 
+    /**
+     * @expectedException \Simple\Redis\RedisException
+     */
     public function testInitThrowException()
     {
         $servers = [
             'server1' => ['host'=> '127.0.0.1', 'port'=>6309, 'timeout'=> 1],
         ];
 
-        $this->setExpectedException('Simple\Redis\RedisException');
         $this->setAndGet($servers);
     }
 
+    /**
+     * @expectedException \Simple\Redis\RedisException
+     */
     public function testMissServerName()
     {
         $servers = [
             'server1' => ['server_name'=> '127.0.0.1', 'port'=>6309],
         ];
 
-        $this->setExpectedException('Simple\Redis\RedisException');
         $this->setAndGet($servers);
     }
 
+    /**
+     * @expectedException \Simple\Redis\RedisException
+     */
     public function testMissServerPort()
     {
         $servers = [
             'server1' => ['host'=> '127.0.0.1', 'port_int'=>6309],
         ];
 
-        $this->setExpectedException('Simple\Redis\RedisException');
         $this->setAndGet($servers);
     }
 
+    /**
+     * @expectedException \Simple\Redis\RedisException
+     */
     public function testEmptyThrowException()
     {
         $servers = [
         ];
 
-        $this->setExpectedException('Simple\Redis\RedisException');
         $this->setAndGet($servers);
     }
+
+    public function testSetAndGetThrowsException()
+    {
+        $servers = [
+            'server1' => ['host' => '127.0.0.1', 'port' => 6379, 'timeout' => 100],
+            'server2' => ['host' => '127.0.0.1', 'port' => 6379, 'timeout' => 100]
+        ];
+
+        $redisServer = new RedisServerMock($servers);
+        $redisServer->setPrefix("rs_");
+        $this->assertEquals('rs_', $redisServer->getPrefix());
+
+        $redisServer->getClient('server1')->set("key", 111);
+        $this->assertEquals(111, $redisServer->getClient('server1')->get("key"));
+    }
+}
+
+class RedisServerMock extends RedisServer {
+
+    protected function createClient(Repository $config)
+    {
+        $result = m::mock('\Redis');
+        $result->shouldReceive('ping')->andThrow(new \RedisException());
+        $result->shouldReceive('set')->andReturn(true);
+        $result->shouldReceive('get')->andReturn(111);
+        return $result;
+    }
+
 }
