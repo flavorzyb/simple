@@ -557,6 +557,39 @@ class Client
     }
 
     /**
+     * @return int
+     */
+    public function getProxyPort()
+    {
+        return $this->proxyPort;
+    }
+
+    /**
+     * @param int $proxyPort
+     */
+    public function setProxyPort($proxyPort)
+    {
+        $this->proxyPort = intval($proxyPort);
+    }
+
+    /**
+     * @return string
+     */
+    public function getProxyHost()
+    {
+        return $this->proxyHost;
+    }
+
+    /**
+     * @param string $proxyHost
+     */
+    public function setProxyHost($proxyHost)
+    {
+        $this->proxyHost = trim($proxyHost);
+    }
+
+
+    /**
      * exec
      * @return boolean
      */

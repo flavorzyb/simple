@@ -104,6 +104,11 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->client->setPostFields("aaa=6&bb=9");
         $this->assertEquals("aaa=6&bb=9", $this->client->getPostFields());
 
+        $this->client->setProxyHost("127.0.0.1");
+        $this->assertEquals("127.0.0.1", $this->client->getProxyHost());
+        $this->client->setProxyPort(8080);
+        $this->assertEquals(8080, $this->client->getProxyPort());
+
         $this->client->useCert(Client::CERT_TYPE_DER, __DIR__ . '/apiclient_cert.pem', __DIR__ . '/apiclient_key.pem');
         $this->client->useCert(Client::CERT_TYPE_ENG, __DIR__ . '/apiclient_cert.pem', __DIR__ . '/apiclient_key.pem');
         $this->client->useCert(10, __DIR__ . '/apiclient_cert.pem', __DIR__ . '/apiclient_key.pem');
@@ -147,6 +152,20 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $this->client->useCert(Client::CERT_TYPE_PEM, __DIR__ . '/apiclient_cert.pem', __DIR__ . '/apiclient_key.pem');
 
-        $this->assertTrue($this->client->exec());
+        $headerArray = array(
+            "Accept: text/html",
+            "Cache-Control: no-cache",
+            "Pragma: no-cache",
+        );
+        $this->client->setHeaderArray($headerArray);
+
+        $this->client->setProxyHost("127.0.0.1");
+        $this->client->setProxyPort(8080);
+
+        $this->assertFalse($this->client->exec());
+
+        $postData = array('name' => 'Foo', 'file' => '/home/user/test.png');
+        $this->client->setPostDataArray($postData);
+        $this->assertFalse($this->client->exec());
     }
 }
