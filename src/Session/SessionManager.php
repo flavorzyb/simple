@@ -94,7 +94,6 @@ class SessionManager
      * throw SessionException when session save path is not exists
      *
      * @return FileSessionHandler
-     * @throws SessionException
      */
     protected function createMemcacheDriver()
     {
@@ -104,24 +103,18 @@ class SessionManager
         $prefix         = trim($this->config['prefix']);
         $expireTime     = intval($this->config['lifetime']);
 
-        try {
-            if ($persistent && (strlen($name) > 0)) {
-                $memcached  = new Memcached($name);
-            } else {
-                $memcached  = new Memcached();
-            }
-
-            if (!sizeof($memcached->getServerList())) {
-                $memcached->addServers($serverArray);
-            }
-
-            $store = new MemcachedStore($memcached, $prefix);
-            return new CacheSessionHandler($store, $expireTime);
-        } catch (Exception $ex) {
-            throw new SessionException($ex->getMessage(), $ex->getCode());
+        if ($persistent && (strlen($name) > 0)) {
+            $memcached  = new Memcached($name);
+        } else {
+            $memcached  = new Memcached();
         }
 
-        return null;
+        if (!sizeof($memcached->getServerList())) {
+            $memcached->addServers($serverArray);
+        }
+
+        $store = new MemcachedStore($memcached, $prefix);
+        return new CacheSessionHandler($store, $expireTime);
     }
 
     /**

@@ -11,6 +11,11 @@ namespace Simple\Session;
 use Simple\Config\Repository;
 use Simple\Filesystem\Filesystem;
 
+/**
+ * Class SessionManagerTest
+ * @package Simple\Session
+ * @runTestsInSeparateProcesses 
+ */
 class SessionManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -119,7 +124,7 @@ class SessionManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('\SessionHandlerInterface', $manager->getDriver());
         $this->assertInstanceOf('Simple\Cache\RedisStore', $manager->getDriver()->getCache());
-//        $manager->init();
+        $manager->init();
     }
 
     /**
