@@ -334,7 +334,6 @@ class Client
             $result['method'] = CURLOPT_POST;
         }elseif (self::METHOD_UPLOAD == $method) {
             $result['method'] = CURLOPT_UPLOAD;
-//            $result['method'] = CURLOPT_POST;
         }
 
         return $result;
@@ -408,20 +407,20 @@ class Client
 
     /**
      * 严格认证
-     * @return boolean
+     * @return int
      */
-    public function isSslVerifyHost()
+    public function getSslVerifyHost()
     {
         return $this->sslVerifyHost;
     }
 
     /**
      * 严格认证
-     * @param boolean $sslVerifyHost
+     * @param bool $sslVerifyHost
      */
     public function setSslVerifyHost($sslVerifyHost)
     {
-        $this->sslVerifyHost = intval($sslVerifyHost);
+        $this->sslVerifyHost = $sslVerifyHost ? 2 : 0;
     }
 
     /**
