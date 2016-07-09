@@ -210,21 +210,21 @@ class Application
     /**
      * load env from file do not override
      */
-    protected function loadEnvironment()
+    public function loadEnvironment()
     {
         if (is_file($this->getFullEnvFilePath())) {
-            $env = new DotEnv($this->basePath, $this->getEnvFile(), true);
+            $env = new DotEnv($this->basePath, $this->getEnvFile());
             $env->load();
         }
     }
     /**
      * load env from file override
      */
-    protected function overloadEnvironment()
+    public function overloadEnvironment()
     {
         if (is_file($this->getFullEnvFilePath())) {
-            $env = new DotEnv($this->basePath, $this->getEnvFile(), false);
-            $env->load();
+            $env = new DotEnv($this->basePath, $this->getEnvFile());
+            $env->overLoad();
         }
     }
 

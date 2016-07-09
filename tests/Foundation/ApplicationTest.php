@@ -9,7 +9,14 @@
 namespace Simple\Foundation;
 
 use Simple\Config\Repository;
+use Simple\Filesystem\Filesystem;
+use Simple\Log\Writer;
 
+/**
+ * Class ApplicationTest
+ * @package Simple\Foundation
+ * @runTestsInSeparateProcesses
+ */
 class ApplicationTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -29,11 +36,12 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->app = null;
     }
 
-
+    /**
+     * @expectedException \Simple\Foundation\Exception
+     */
     public function testBootstrapThrowException()
     {
         $this->app  = new Application("error_path");
-        $this->setExpectedException('Simple\Foundation\Exception');
         $this->app->bootStrap();
     }
 
@@ -88,7 +96,28 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testBootstrapWithConfigPath()
     {
         $this->app->setConfigPath(__DIR__ . '/../config/app.php');
+        $this->app->setEnvFile('Foundation/.env');
         $this->app->bootStrap();
+        $this->assertEquals("local", env("APP_ENV"));
+
+        $this->app->setEnvFile('Foundation/.env.testing');
+        $this->app->overloadEnvironment();
+        $this->assertEquals("testing", env("APP_ENV"));
+
+        // not overload, keep values
+        $this->app->setEnvFile('Foundation/.env');
+        $this->app->loadEnvironment();
+        $this->assertEquals("testing", env("APP_ENV"));
+    }
+
+    public function testBootstrapWithConfigPathTestingEnv()
+    {
+        $this->app->setConfigPath(__DIR__ . '/../config/app.php');
+        $this->app->setEnvFile('Foundation/.env.testing');
+        $this->app->bootStrap();
+
+        $this->app->setLog(new Writer(new Filesystem()));
+        $this->assertTrue($this->app->getLog() instanceof Writer);
     }
 
     public function testNamespaceIsMutable()
