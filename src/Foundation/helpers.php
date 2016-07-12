@@ -25,12 +25,10 @@ if ( ! function_exists('env'))
             case '(false)':
                 return false;
 
-            case 'empty':
-            case '(empty)':
+            case '':
                 return '';
 
             case 'null':
-            case '(null)':
                 return null;
         }
 
