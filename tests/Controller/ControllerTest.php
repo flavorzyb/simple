@@ -1,15 +1,18 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flavor
- * Date: 15/8/17
- * Time: 下午7:30
- */
-
 namespace Simple\Controller;
+
+use Closure;
 
 class MyController extends Controller
 {
+}
+
+class MyControllerMiddleware
+{
+    public function handle(Closure $next)
+    {
+        return $next();
+    }
 }
 
 class ControllerTest extends \PHPUnit_Framework_TestCase
@@ -31,5 +34,19 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($controller->getCompilePath());
         $controller->setCompilePath(__DIR__);
         $this->assertEquals(__DIR__, $controller->getCompilePath());
+        self::assertEquals([], $controller->getMiddleware());
+
+        $middlewareArray = [new MyControllerMiddleware()];
+        $controller->setMiddleware($middlewareArray);
+        self::assertEquals($middlewareArray, $controller->getMiddleware());
+    }
+
+    /**
+     * @expectedException \BadMethodCallException
+     */
+    public function testThrowBadMethodCallException()
+    {
+        $controller = new MyController();
+        $controller->notExistsMethod();
     }
 }

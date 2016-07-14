@@ -9,6 +9,8 @@
 namespace Simple\Controller;
 
 use Smarty;
+use BadMethodCallException;
+
 
 abstract class Controller
 {
@@ -28,6 +30,13 @@ abstract class Controller
      * @var string
      */
     protected $compilePath   = null;
+
+    /**
+     * The middleware registered on the controller.
+     *
+     * @var array
+     */
+    protected $middleware = [];
 
     /**
      * @param null $resourcePath
@@ -116,5 +125,36 @@ abstract class Controller
         }
 
         return $this->templateEngine;
+    }
+
+    /**
+     * Get the middleware assigned to the controller.
+     *
+     * @return array
+     */
+    public function getMiddleware()
+    {
+        return $this->middleware;
+    }
+
+    /**
+     * set the middleware
+     * @param array $middlewareArray
+     */
+    public function setMiddleware(array $middlewareArray)
+    {
+        $this->middleware = $middlewareArray;
+    }
+
+    /**
+     * Handle calls to missing methods on the controller.
+     *
+     * @param  string  $method
+     * @param  array   $parameters
+     * @throws \BadMethodCallException
+     */
+    public function __call($method, $parameters)
+    {
+        throw new BadMethodCallException("Method [$method] does not exist.");
     }
 }
