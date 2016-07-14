@@ -1,7 +1,6 @@
 <?php
 namespace Simple\Support;
 
-
 class SimpleStringTest extends \PHPUnit_Framework_TestCase
 {
     /**
