@@ -9,7 +9,6 @@
 namespace Simple\Session;
 
 use Memcached;
-use Exception;
 
 use Simple\Cache\MemcachedStore;
 use Simple\Cache\RedisStore;
@@ -93,7 +92,7 @@ class SessionManager
      * create memcached session driver
      * throw SessionException when session save path is not exists
      *
-     * @return FileSessionHandler
+     * @return CacheSessionHandler
      */
     protected function createMemcacheDriver()
     {
