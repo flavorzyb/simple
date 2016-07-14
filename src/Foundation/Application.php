@@ -438,12 +438,16 @@ class Application
         }
 
         $class      = sprintf("%s\\Controller%s\\%sController", $this->appNameSpace, $subModule, $controller);
-
         if (!(class_exists($class) && method_exists($class, $method))) {
             $this->fileNotFound();
         } else {
             $class  = new $class;
-            call_user_func_array(array($class, $method), $params);
+            $pipe = new Pipeline();
+            $pipe->through([$class->getMiddleWare()])->then(function () use ($class, $method, $params) {
+                call_user_func_array(array($class, $method), $params);
+            });
+
+            //call_user_func_array(array($class, $method), $params);
         }
     }
 
@@ -452,10 +456,7 @@ class Application
      */
     public function fileNotFound()
     {
-        if ("cli" != PHP_SAPI) {
-            header('HTTP/1.1 404 Not Found');
-            exit('404 Not Found');
-        }
+        throw new \BadMethodCallException("can not found file.");
     }
 
     /**

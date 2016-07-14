@@ -40,13 +40,4 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $controller->setMiddleware($middlewareArray);
         self::assertEquals($middlewareArray, $controller->getMiddleware());
     }
-
-    /**
-     * @expectedException \BadMethodCallException
-     */
-    public function testThrowBadMethodCallException()
-    {
-        $controller = new MyController();
-        $controller->notExistsMethod();
-    }
 }

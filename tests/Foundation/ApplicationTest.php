@@ -55,7 +55,10 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Application::VERSION, $this->app->version());
     }
 
-    public function testRun()
+    /**
+     * @expectedException \BadMethodCallException
+     */
+    public function testRunFileNotFound()
     {
         // empty for request uri
         $config = new Repository(require __DIR__ . '/../config/app.php');
@@ -63,27 +66,86 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($config, $this->app->getConfig());
         $this->app->bootStrap();
         $this->app->run();
+    }
+
+    /**
+     * @expectedException \BadMethodCallException
+     */
+    public function testRunIndex()
+    {
+        // empty for request uri
+        $config = new Repository(require __DIR__ . '/../config/app.php');
+        $this->app->setConfig($config);
+        $this->assertEquals($config, $this->app->getConfig());
+        $this->app->bootStrap();
 
         // request uri = index.php
         $_SERVER['REQUEST_URI'] = '/';
         $_SERVER['QUERY_STRING'] = '';
         $this->app->run();
+    }
 
-//
+    /**
+     * @expectedException \BadMethodCallException
+     */
+    public function testRunIndexPhp()
+    {
+        // empty for request uri
+        $config = new Repository(require __DIR__ . '/../config/app.php');
+        $this->app->setConfig($config);
+        $this->assertEquals($config, $this->app->getConfig());
+        $this->app->bootStrap();
+
         // request uri = index.php
         $_SERVER['REQUEST_URI'] = '/index.php';
         $_SERVER['QUERY_STRING'] = '';
         $this->app->run();
+    }
+
+    /**
+     * @expectedException \BadMethodCallException
+     */
+    public function testRunIndexPhpIdCode()
+    {
+        // empty for request uri
+        $config = new Repository(require __DIR__ . '/../config/app.php');
+        $this->app->setConfig($config);
+        $this->assertEquals($config, $this->app->getConfig());
+        $this->app->bootStrap();
 
         // request uri = /index.php?id=11223&code=123
         $_SERVER['REQUEST_URI'] = '/index.php?id=11223&code=123';
         $_SERVER['QUERY_STRING'] = 'id=11223&code=123';
         $this->app->run();
+    }
+
+    /**
+     * @expectedException \BadMethodCallException
+     */
+    public function testRunIndexPhpAAABB()
+    {
+        // empty for request uri
+        $config = new Repository(require __DIR__ . '/../config/app.php');
+        $this->app->setConfig($config);
+        $this->assertEquals($config, $this->app->getConfig());
+        $this->app->bootStrap();
 
         // request uri = /index.php/aaa/bb?id=11223&code=123
-        $_SERVER['REQUEST_URI'] = '/index.php/aaa/bb?id=11223&code=123';
+        $_SERVER['REQUEST_URI'] = '/index.php//aaa/bb?id=11223&code=123';
         $_SERVER['QUERY_STRING'] = 'id=11223&code=123';
         $this->app->run();
+    }
+
+    /**
+     * @expectedException \BadMethodCallException
+     */
+    public function testRunIndexPhpSubModule()
+    {
+        // empty for request uri
+        $config = new Repository(require __DIR__ . '/../config/app.php');
+        $this->app->setConfig($config);
+        $this->assertEquals($config, $this->app->getConfig());
+        $this->app->bootStrap();
 
         $_SERVER['REQUEST_URI'] = '/aaa/bbb/11/23/44?id=87&code=89';
         $_SERVER['QUERY_STRING'] = 'id=87&code=89';
@@ -133,5 +195,35 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
         $this->app->setDefaultMethod("index");
         $this->assertEquals("index", $this->app->getDefaultMethod());
+    }
+
+    /**
+     * @expectedException \ErrorException
+     */
+    public function testTriggerError()
+    {
+        $config = new Repository(require __DIR__ . '/../config/app.php');
+        $this->app->setConfig($config);
+        $this->assertEquals($config, $this->app->getConfig());
+        $this->app->bootStrap();
+
+        trigger_error("It is error", E_USER_ERROR);
+    }
+
+    /**
+     * @expectedException \ErrorException
+     */
+    public function testTriggerErrorIgnore()
+    {
+        $_ENV['APP_ENV'] = 'local';
+        $_SERVER['APP_ENV'] = 'local';
+        putenv("APP_ENV='local");
+
+        $config = new Repository(require __DIR__ . '/../config/app.php');
+        $this->app->setConfig($config);
+        $this->assertEquals($config, $this->app->getConfig());
+        $this->app->bootStrap();
+
+        trigger_error("It is error", 0);
     }
 }
