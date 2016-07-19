@@ -31,7 +31,14 @@ class TestController {
 
     public function index()
     {
-        print "aaaaa\n";
+        return true;
+    }
+}
+
+class TestControllerNoMiddleware
+{
+    public function index()
+    {
         return true;
     }
 }
@@ -51,5 +58,13 @@ class PipelineTest extends \PHPUnit_Framework_TestCase
         $_SERVER['aaa'] = 1;
         $result = $pipeLine->through($middleware)->then(function () use ($controller){ return $controller->index();});
         $this->assertFalse($result);
+    }
+
+    public function testThenNoMiddleware()
+    {
+        $pipeLine = new Pipeline();
+        $controller = new TestControllerNoMiddleware();
+        $result = $pipeLine->through([])->then(function () use ($controller){ return $controller->index();});
+        $this->assertTrue($result);
     }
 }
