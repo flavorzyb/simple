@@ -443,7 +443,7 @@ class Application
         } else {
             $class  = new $class;
             $pipe = new Pipeline();
-            $pipe->through([$class->getMiddleWare()])->then(function () use ($class, $method, $params) {
+            $pipe->through($class->getMiddleWare())->then(function () use ($class, $method, $params) {
                 call_user_func_array(array($class, $method), $params);
             });
 
