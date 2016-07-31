@@ -12,12 +12,12 @@
   ],
 
   "require": {
-    "php": ">=5.5.0",
-    "smarty/smarty": "~3.1.27"
+    "php": ">=5.6.0",
+    "smarty/smarty": "~3.1"
   },
 
   "require-dev": {
-    "mockery/mockery": "~0.9.1",
+    "mockery/mockery": "~0.9",
     "phpunit/phpunit": "~5.0"
   },
 
