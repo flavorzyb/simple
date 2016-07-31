@@ -42,6 +42,7 @@ class CSRFToken
      */
     public function registerCSRFString()
     {
+        mt_srand(time());
         $string = md5(mt_rand().'_'.time().'_'.mt_rand().'_'.mt_rand());
         $_SESSION[$this->csrfTokenString] = $string;
     }
