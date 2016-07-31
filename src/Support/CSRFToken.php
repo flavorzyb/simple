@@ -48,6 +48,15 @@ class CSRFToken
     }
 
     /**
+     * has token
+     * @return bool
+     */
+    public function hasToken()
+    {
+        return isset($_SESSION[$this->csrfTokenString]);
+    }
+
+    /**
      * validate csrf string
      *
      * @param string $str

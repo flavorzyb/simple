@@ -8,7 +8,9 @@ class CSRFTokenTest extends \PHPUnit_Framework_TestCase
         $token = new CSRFToken();
         $token->cleanCSRFString();
         $this->assertEquals('', $token->getCSRFString());
+        self::assertFalse($token->hasToken());
         $token->registerCSRFString();
+        self::assertTrue($token->hasToken());
         $str = $token->getCSRFString();
         $this->assertTrue(strlen($str) > 0);
         $this->assertTrue($token->matchCSRFString($str));
