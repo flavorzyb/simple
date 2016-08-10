@@ -12,6 +12,15 @@ namespace Simple\Http;
 class Request
 {
     /**
+     * get method
+     */
+    const GET = "GET";
+
+    /**
+     * post method
+     */
+    const POST = "POST";
+    /**
      * get value
      * @param string $key
      * @param mixed $default
@@ -40,5 +49,22 @@ class Request
         }
 
         return (isset($_POST[$key]) ? $_POST[$key] : $default);
+    }
+
+    /**
+     * is get request or not
+     * @return bool
+     */
+    public static function isGetMethod() {
+        return isset($_SERVER['REQUEST_METHOD']) && self::GET == $_SERVER['REQUEST_METHOD'];
+    }
+
+    /**
+     * is post request or not
+     *
+     * @return bool
+     */
+    public static function isPostMethod() {
+        return isset($_SERVER['REQUEST_METHOD']) && self::POST == $_SERVER['REQUEST_METHOD'];
     }
 }

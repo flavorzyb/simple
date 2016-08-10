@@ -18,6 +18,10 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(112, Request::get("aaa", 112));
         $_GET['aaa'] = 13;
         $this->assertEquals(13, Request::get("aaa", 112));
+
+        self::assertFalse(Request::isGetMethod());
+        $_SERVER['REQUEST_METHOD'] = Request::GET;
+        self::assertTrue(Request::isGetMethod());
     }
 
     public function testPostParams()
@@ -31,5 +35,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(112, Request::post("aaa", 112));
         $_POST['aaa'] = 3;
         $this->assertEquals(3, Request::post("aaa", 112));
+
+        self::assertFalse(Request::isPostMethod());
+        $_SERVER['REQUEST_METHOD'] = Request::POST;
+        self::assertTrue(Request::isPostMethod());
     }
 }
