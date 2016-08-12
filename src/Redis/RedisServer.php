@@ -88,7 +88,7 @@ class RedisServer
         $port       = intval($config['port']);
         $timeout    = floatval($config['timeout']);
         $persistent = boolval($config['persistent']);
-
+        $password   = isset($config['password']) ? $config['password'] : '';
         $redis      = new Redis();
         try {
 
@@ -96,6 +96,10 @@ class RedisServer
                 $result = $redis->pconnect($server, $port, $timeout);
             } else {
                 $result = $redis->connect($server, $port, $timeout);
+            }
+
+            if ('' != $password) {
+                $result = $redis->auth($password);
             }
 
             if (false == $result) {

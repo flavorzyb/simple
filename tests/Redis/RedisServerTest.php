@@ -122,11 +122,11 @@ class RedisServerTest extends \PHPUnit_Framework_TestCase
         $this->setAndGet($servers);
     }
 
-    public function testSetAndGetThrowsException()
+    public function testSetAndGetWithMock()
     {
         $servers = [
-            'server1' => ['host' => '127.0.0.1', 'port' => 6379, 'timeout' => 100],
-            'server2' => ['host' => '127.0.0.1', 'port' => 6379, 'timeout' => 100]
+            'server1' => ['host' => '127.0.0.1', 'port' => 6379, 'timeout' => 100, 'password' => '111222'],
+            'server2' => ['host' => '127.0.0.1', 'port' => 6379, 'timeout' => 100, 'password' => '111222']
         ];
 
         $redisServer = new RedisServerMock($servers);
@@ -145,6 +145,7 @@ class RedisServerMock extends RedisServer {
         $result = m::mock('\Redis');
         $result->shouldReceive('ping')->andThrow(new \RedisException());
         $result->shouldReceive('set')->andReturn(true);
+        $result->shouldReceive('auth')->andReturn(true);
         $result->shouldReceive('get')->andReturn(111);
         return $result;
     }
