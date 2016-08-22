@@ -2,6 +2,7 @@
 namespace Simple\Middleware;
 
 use Closure;
+use Simple\Foundation\Exception;
 use Simple\Http\Request;
 use Simple\Support\CSRFToken;
 
@@ -21,6 +22,7 @@ class VerifyCsrfToken
      * Handle an incoming request.
      * @param Closure $next
      * @return bool
+     * @throws Exception
      */
     public function handle(Closure $next)
     {
@@ -28,7 +30,7 @@ class VerifyCsrfToken
             return $next();
         }
 
-        return false;
+        throw new TokenMismatchException("TokenMismatchException");
     }
 
     /**

@@ -28,15 +28,24 @@ class VerifyCsrfTokenTest extends \PHPUnit_Framework_TestCase
         self::assertEquals(10, $result);
     }
 
+    /**
+     * @expectedException \Simple\MiddleWare\TokenMismatchException
+     */
     public function testHandleMethodPostVerifyFail()
     {
         $_SERVER['REQUEST_METHOD'] = 'POST';
-        $result = $this->verifyCsrfToken->handle(function () {return 10;});
-        self::assertEquals(false, $result);
+        $this->verifyCsrfToken->handle(function () {return 10;});
+    }
+
+    /**
+     * @expectedException \Simple\MiddleWare\TokenMismatchException
+     */
+    public function testHandleMethodPostVerifyFailErrorToken()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'POST';
 
         $_POST['_token'] = [123, 222];
-        $result = $this->verifyCsrfToken->handle(function () {return 10;});
-        self::assertEquals(false, $result);
+        $this->verifyCsrfToken->handle(function () {return 10;});
     }
 
     public function testHandleMethodPostVerifySuccess()
