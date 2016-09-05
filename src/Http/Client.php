@@ -193,6 +193,13 @@ class Client
     protected $responseHeader   = "";
 
     /**
+     * A username and password formatted as "[username]:[password]" to use for the connection.
+     *
+     * @var string
+     */
+    protected $userPassword = '';
+
+    /**
      * @return string
      */
     public function getMethod()
@@ -588,6 +595,21 @@ class Client
         $this->proxyHost = trim($proxyHost);
     }
 
+    /**
+     * @return string
+     */
+    public function getUserPassword()
+    {
+        return $this->userPassword;
+    }
+
+    /**
+     * @param string $userPassword
+     */
+    public function setUserPassword($userPassword)
+    {
+        $this->userPassword = $userPassword;
+    }
 
     /**
      * exec
@@ -649,6 +671,12 @@ class Client
             if ((self::PROXY_HOST_DEFAULT != $this->proxyHost) && (self::PROXY_PORT_DEFAULT != $this->proxyPort)) {
                 curl_setopt($ch, CURLOPT_PROXY,     $this->proxyHost);
                 curl_setopt($ch, CURLOPT_PROXYPORT, $this->proxyPort);
+            }
+
+            // HTTP AUTH
+            if ('' != $this->userPassword) {
+                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC) ;
+                curl_setopt($ch, CURLOPT_USERPWD, $this->userPassword);
             }
 
             //method and data

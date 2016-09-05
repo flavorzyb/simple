@@ -109,6 +109,9 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->client->setProxyPort(8080);
         $this->assertEquals(8080, $this->client->getProxyPort());
 
+        $this->client->setUserPassword('api:key-b761c24f77fc5d77769d5a442ccacc10');
+        $this->assertEquals('api:key-b761c24f77fc5d77769d5a442ccacc10', $this->client->getUserPassword());
+
         $this->client->useCert(Client::CERT_TYPE_DER, __DIR__ . '/apiclient_cert.pem', __DIR__ . '/apiclient_key.pem');
         $this->client->useCert(Client::CERT_TYPE_ENG, __DIR__ . '/apiclient_cert.pem', __DIR__ . '/apiclient_key.pem');
         $this->client->useCert(10, __DIR__ . '/apiclient_cert.pem', __DIR__ . '/apiclient_key.pem');
@@ -118,6 +121,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     {
         $this->client->setUrl('http://127.0.0.1/test.php');
         $this->client->setHeader(true);
+        $this->client->setUserPassword('api:key-b761c24f77fc5d77769d5a442ccacc10');
         $this->assertTrue($this->client->isHeader());
         $this->assertTrue($this->client->exec());
         $this->assertTrue(strlen($this->client->getResponse()) > 0);
