@@ -50,4 +50,16 @@ class Validator {
 
         return false;
     }
+
+    /**
+     * validate mobile number
+     *
+     * @param string $mobile
+     * @return bool
+     */
+    public function validateMobile($mobile)
+    {
+        $mobile = trim($mobile);
+        return 1 == preg_match('/^1[34578]{1}\d{9}$/',$mobile);
+    }
 }

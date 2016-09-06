@@ -29,4 +29,10 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->validator->validatePassword("this is a password"));
         $this->assertFalse($this->validator->validatePassword("this"));
     }
+
+    public function testValidateMobile()
+    {
+        self::assertTrue($this->validator->validateMobile('18500047623'));
+        self::assertFalse($this->validator->validateMobile('185000476232'));
+    }
 }
