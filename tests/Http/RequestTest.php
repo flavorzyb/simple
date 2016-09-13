@@ -40,4 +40,15 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_METHOD'] = Request::POST;
         self::assertTrue(Request::isPostMethod());
     }
+
+    public function testReferer()
+    {
+        if (isset($_SERVER['HTTP_REFERER'])) {
+            unset($_SERVER['HTTP_REFERER']);
+        }
+
+        self::assertEquals('', Request::refererUrl());
+        $_SERVER['HTTP_REFERER'] = 'http://www.baidu.com';
+        self::assertEquals('http://www.baidu.com', Request::refererUrl());
+    }
 }

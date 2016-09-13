@@ -67,4 +67,9 @@ class Request
     public static function isPostMethod() {
         return isset($_SERVER['REQUEST_METHOD']) && self::POST == $_SERVER['REQUEST_METHOD'];
     }
+
+    public static function refererUrl()
+    {
+        return isset($_SERVER['HTTP_REFERER']) ? trim($_SERVER['HTTP_REFERER']) : '';
+    }
 }
