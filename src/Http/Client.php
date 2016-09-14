@@ -645,7 +645,7 @@ class Client
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->sslVerifyPeer);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $this->sslVerifyHost);
 
-            if ($this->sslVerifyPeer && $this->sslVerifyHost) {
+            if ($this->sslVerifyPeer && $this->sslVerifyHost && ('' != $this->caInfo)) {
                 curl_setopt($ch, CURLOPT_CAINFO, $this->caInfo);
             }
 
