@@ -261,11 +261,18 @@ class FilesystemTest extends \PHPUnit_Framework_TestCase
         $file->deleteDirectory($dir);
     }
 
-    public function testMd5FilePath() {
+    public function testMd5FilePath()
+    {
         $file = new Filesystem();
         $this->assertFalse($file->md5File($this->basePath . '/foo.txt'));
 
         file_put_contents($this->basePath . '/foo.txt', 'foo');
         $this->assertTrue(strlen($file->md5File($this->basePath . '/foo.txt')) > 0);
+    }
+
+    public function testMoveUploadedFile()
+    {
+        $file = new Filesystem();
+        self::assertFalse($file->moveUploadedFile(uniqid() .'_test.png', __DIR__ . '/test.png'));
     }
 }

@@ -357,6 +357,18 @@ class Filesystem
     }
 
     /**
+     * Moves an uploaded file to a new location
+     *
+     * @param string $filename
+     * @param string $destination
+     * @return bool
+     */
+    public function moveUploadedFile($filename, $destination)
+    {
+        return move_uploaded_file($filename, $destination);
+    }
+
+    /**
      * Empty the specified directory of all files and folders.
      *
      * @param  string  $directory
