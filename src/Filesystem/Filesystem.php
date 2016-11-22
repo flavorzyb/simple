@@ -33,7 +33,11 @@ class Filesystem
      */
     public function get($path)
     {
-        if ($this->isFile($path)) return file_get_contents($path);
+        $result = @file_get_contents($path);
+
+        if (false !== $result) {
+            return $result;
+        }
 
         throw new FileNotFoundException("File does not exist at path {$path}");
     }
