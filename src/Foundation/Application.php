@@ -163,6 +163,7 @@ class Application
             }
 
             $this->setConfig(new Repository(require $filePath));
+            date_default_timezone_set($this->config['timezone']);
         }
     }
 
@@ -189,7 +190,6 @@ class Application
      */
     protected function initEnvironment()
     {
-        date_default_timezone_set($this->config['timezone']);
         mb_internal_encoding('UTF-8');
 
         if (is_file($this->getFullEnvFilePath())) {
@@ -234,8 +234,8 @@ class Application
      */
     public function bootStrap()
     {
-        $this->initConfig();
         $this->initEnvironment();
+        $this->initConfig();
 
         if ('testing'==env('APP_ENV')) {
             error_reporting(-1);
