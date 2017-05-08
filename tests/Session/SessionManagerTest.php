@@ -8,6 +8,7 @@
 
 namespace Simple\Session;
 
+use PHPUnit\Framework\TestCase;
 use Simple\Config\Repository;
 use Simple\Filesystem\Filesystem;
 
@@ -16,7 +17,7 @@ use Simple\Filesystem\Filesystem;
  * @package Simple\Session
  * @runTestsInSeparateProcesses 
  */
-class SessionManagerTest extends \PHPUnit_Framework_TestCase
+class SessionManagerTest extends TestCase
 {
     /**
      * @var Repository

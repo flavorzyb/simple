@@ -1,18 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flavor
- * Date: 15/8/15
- * Time: 下午12:22
- */
-
 namespace Simple\Log;
 
+use PHPUnit\Framework\TestCase;
 use Simple\Filesystem\Filesystem;
 
 use Mockery as m;
 
-class WriterTest extends \PHPUnit_Framework_TestCase
+class WriterTest extends TestCase
 {
     /**
      * @var Writer

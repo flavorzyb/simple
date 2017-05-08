@@ -1,9 +1,10 @@
 <?php
 namespace Simple\MiddleWare;
 
+use PHPUnit\Framework\TestCase;
 use Simple\Support\CSRFToken;
 
-class VerifyCsrfTokenTest extends \PHPUnit_Framework_TestCase
+class VerifyCsrfTokenTest extends TestCase
 {
     /**
      * @var VerifyCsrfToken

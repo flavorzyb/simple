@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flavor
- * Date: 15/8/16
- * Time: 上午12:44
- */
-
 namespace Simple\Session;
 
 use Memcached;

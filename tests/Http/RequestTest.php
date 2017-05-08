@@ -1,11 +1,10 @@
 <?php
-
 namespace Http;
 
-
+use PHPUnit\Framework\TestCase;
 use Simple\Http\Request;
 
-class RequestTest extends \PHPUnit_Framework_TestCase
+class RequestTest extends TestCase
 {
     public function testGetParams()
     {

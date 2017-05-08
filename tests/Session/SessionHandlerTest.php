@@ -8,9 +8,10 @@
 
 namespace Simple\Session;
 
+use PHPUnit\Framework\TestCase;
 use SessionHandlerInterface;
 
-abstract class SessionHandlerTest extends \PHPUnit_Framework_TestCase
+abstract class SessionHandlerTest extends TestCase
 {
     /**
      * @var SessionHandlerInterface

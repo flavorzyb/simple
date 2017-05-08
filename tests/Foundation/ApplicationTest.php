@@ -1,13 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flavor
- * Date: 15/8/15
- * Time: 上午12:28
- */
-
 namespace Simple\Foundation;
 
+use PHPUnit\Framework\TestCase;
 use Simple\Config\Repository;
 use Simple\Filesystem\Filesystem;
 use Simple\Log\Writer;
@@ -17,7 +11,7 @@ use Simple\Log\Writer;
  * @package Simple\Foundation
  * @runTestsInSeparateProcesses
  */
-class ApplicationTest extends \PHPUnit_Framework_TestCase
+class ApplicationTest extends TestCase
 {
     /**
      * @var Application

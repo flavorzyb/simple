@@ -1,15 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flavor
- * Date: 15/8/21
- * Time: 下午2:49
- */
-
 namespace Simple\Http;
 
+use PHPUnit\Framework\TestCase;
 
-class ClientTest extends \PHPUnit_Framework_TestCase
+class ClientTest extends TestCase
 {
     /**
      * @var Client

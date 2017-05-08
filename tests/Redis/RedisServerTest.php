@@ -1,17 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flavor
- * Date: 15/8/16
- * Time: 下午5:28
- */
-
 namespace Simple\Redis;
 
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 use Simple\Config\Repository;
 
-class RedisServerTest extends \PHPUnit_Framework_TestCase
+class RedisServerTest extends TestCase
 {
     protected function setAndGet(array $servers)
     {

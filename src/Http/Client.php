@@ -1,13 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flavor
- * Date: 15/8/21
- * Time: 上午9:21
- */
-
 namespace Simple\Http;
-
 
 class Client
 {

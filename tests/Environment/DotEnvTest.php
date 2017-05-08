@@ -1,10 +1,10 @@
 <?php
 namespace Environment;
 
-
+use PHPUnit\Framework\TestCase;
 use Simple\Environment\DotEnv;
 
-class DotEnvTest extends \PHPUnit_Framework_TestCase
+class DotEnvTest extends TestCase
 {
     public function testOptions() {
         $env = new DotEnv(__DIR__, ".env");

@@ -1,7 +1,9 @@
 <?php
 namespace Simple\Support;
 
-class CSRFTokenTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class CSRFTokenTest extends TestCase
 {
     public function testCSRFString()
     {

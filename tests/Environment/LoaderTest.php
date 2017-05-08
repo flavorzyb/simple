@@ -1,17 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flavor
- * Date: 15/8/18
- * Time: 上午10:07
- */
-
 namespace Environment;
 
-
+use PHPUnit\Framework\TestCase;
 use Simple\Environment\Loader;
 
-class LoaderTest extends \PHPUnit_Framework_TestCase
+class LoaderTest extends TestCase
 {
     protected $path = __DIR__;
     protected $file = ".env";

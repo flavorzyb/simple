@@ -1,15 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flavor
- * Date: 15/8/15
- * Time: 上午9:25
- */
-
 namespace Simple\Config;
 
+use PHPUnit\Framework\TestCase;
 
-class RepositoryTest extends \PHPUnit_Framework_TestCase
+class RepositoryTest extends TestCase
 {
     public function testOptionIsMutable()
     {

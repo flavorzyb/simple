@@ -1,15 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flavor
- * Date: 15/8/15
- * Time: 上午9:40
- */
-
 namespace Simple\Filesystem;
 
+use PHPUnit\Framework\TestCase;
 
-class FilesystemTest extends \PHPUnit_Framework_TestCase
+class FilesystemTest extends TestCase
 {
     protected $basePath     = TESTING_TMP_PATH;
 

@@ -1,14 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flavor
- * Date: 15/8/15
- * Time: 下午4:45
- */
-
 namespace Simple\Cache;
 
-abstract class StoreTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+abstract class StoreTest extends TestCase
 {
     /**
      * @var Store

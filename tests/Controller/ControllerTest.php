@@ -2,6 +2,7 @@
 namespace Simple\Controller;
 
 use Closure;
+use PHPUnit\Framework\TestCase;
 
 class MyController extends Controller
 {
@@ -15,7 +16,7 @@ class MyControllerMiddleware
     }
 }
 
-class ControllerTest extends \PHPUnit_Framework_TestCase
+class ControllerTest extends TestCase
 {
     public function testTemplateEngineIsMutable()
     {

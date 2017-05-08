@@ -9,7 +9,9 @@
 namespace Simple\Translation;
 
 
-class LangTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class LangTest extends TestCase
 {
     public function testOptions() {
         $lang = new Lang("zh_CN");

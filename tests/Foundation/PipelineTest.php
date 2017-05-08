@@ -2,6 +2,7 @@
 namespace Foundation;
 
 use Closure;
+use PHPUnit\Framework\TestCase;
 use Simple\Foundation\Pipeline;
 
 class TestMiddleware
@@ -43,7 +44,7 @@ class TestControllerNoMiddleware
     }
 }
 
-class PipelineTest extends \PHPUnit_Framework_TestCase
+class PipelineTest extends TestCase
 {
     public function testThen()
     {

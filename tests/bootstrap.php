@@ -10,6 +10,6 @@
 | loading of any our classes "manually". Feels great to relax.
 |
 */
-require __DIR__.'/vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 const TESTING_BASE_PATH = __DIR__ ;
 const TESTING_TMP_PATH  = TESTING_BASE_PATH . DIRECTORY_SEPARATOR . 'tmp';

@@ -1,17 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: flavor
- * Date: 15/8/17
- * Time: 上午9:04
- */
-
 namespace Simple\Database;
 
 use PDO;
+use PHPUnit\Framework\TestCase;
 use Simple\Config\Repository;
 
-class DbTest extends \PHPUnit_Framework_TestCase
+class DbTest extends TestCase
 {
     /**
      * @var Repository

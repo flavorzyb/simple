@@ -1,7 +1,9 @@
 <?php
 namespace Simple\Support;
 
-class SimpleStringTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class SimpleStringTest extends TestCase
 {
     /**
      * @var SimpleString
