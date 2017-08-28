@@ -1,0 +1,33 @@
+{
+    "name": "simple/contracts",
+    "description": "The Simple Contracts package.",
+    "license": "MIT",
+    "homepage": "https://www.zhuyanbin.com",
+    "support": {
+        "issues": "https://github.com/flavorzyb/simple/issues",
+        "source": "https://github.com/flavorzyb/simple"
+    },
+    "authors": [
+        {
+            "name": "Yanbin Zhu",
+            "email": "haker-haker@163.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Simple\\Contracts\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "5.4-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev"
+}

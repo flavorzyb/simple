@@ -26,18 +26,15 @@
     ],
 
     "files": [
-      "src/Foundation/helpers.php"
     ],
 
     "psr-4": {
-      "Simple\\": "src/"
+      "Simple\\": "src/Simple/"
     }
   },
 
   "autoload-dev": {
     "classmap": [
-      "tests/Cache/StoreTest.php",
-      "tests/Session/SessionHandlerTest.php"
     ],
 
     "files": [
