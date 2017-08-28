@@ -1,6 +1,6 @@
 {
-    "name": "simple/config",
-    "description": "The Simple Config package.",
+    "name": "simple/support",
+    "description": "The Simple Support package.",
     "license": "MIT",
     "homepage": "https://www.zhuyanbin.com",
     "support": {
@@ -18,12 +18,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Simple\\Config\\": ""
+            "Simple\\Support\\": ""
         }
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.0.0-dev"
+            "dev-master": "5.4-dev"
         }
     },
     "config": {

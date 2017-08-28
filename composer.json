@@ -1,48 +1,43 @@
 {
-  "name": "flavor/simple",
-  "description": "The Simple Framework.",
-  "keywords": ["framework", "simple"],
-  "license": "MIT",
-  "homepage": "http://www.zhuyanbin.com",
-  "authors": [
-    {
-      "name": "Yanbin Zhu",
-      "email": "haker-haker@163.com"
-    }
-  ],
-
-  "require": {
-    "php": ">=5.6.0",
-    "smarty/smarty": "~3.1"
-  },
-
-  "require-dev": {
-    "mockery/mockery": "~0.9",
-    "phpunit/phpunit": "~6.0"
-  },
-
-  "autoload": {
-    "classmap": [
+    "name": "flavor/simple",
+    "description": "The Simple Framework.",
+    "keywords": [
+        "framework",
+        "simple"
     ],
-
-    "files": [
+    "license": "MIT",
+    "version": "2.0.0",
+    "homepage": "http://www.zhuyanbin.com",
+    "authors": [
+        {
+            "name": "Yanbin Zhu",
+            "email": "haker-haker@163.com"
+        }
     ],
-
-    "psr-4": {
-      "Simple\\": "src/Simple/"
-    }
-  },
-
-  "autoload-dev": {
-    "classmap": [
-    ],
-
-    "files": [
-    ],
-
-    "psr-4": {
-    }
-  },
-
-  "minimum-stability": "stable"
+    "require": {
+        "php": ">=5.6.0",
+        "smarty/smarty": "~3.1"
+    },
+    "require-dev": {
+        "mockery/mockery": "~0.9",
+        "phpunit/phpunit": "~6.0"
+    },
+    "autoload": {
+        "classmap": [
+        ],
+        "files": [
+        ],
+        "psr-4": {
+            "Simple\\": "src/Simple/"
+        }
+    },
+    "autoload-dev": {
+        "classmap": [
+        ],
+        "files": [
+        ],
+        "psr-4": {
+        }
+    },
+    "minimum-stability": "stable"
 }
